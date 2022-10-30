@@ -1,32 +1,44 @@
 #ifndef EMPLOYEEDATAMODEL_H
 #define EMPLOYEEDATAMODEL_H
 
-#include <QObject>
 #include <QAbstractListModel>
-#include <QAbstractListModel>
-#include <QFile>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonDocument>
-#include <employeedataitem.h>
+#include "employeedatalist.h"
 
-
-class EmployeeDataModel: public QAbstractListModel
+class EmployeeDataModel : public QAbstractListModel
 {
-public:
-    EmployeeDataModel(QObject *parent = nullptr): QAbstractListModel(parent){}
+    Q_OBJECT
 
-    enum E_EMPLOYEE_DATA_ROLES {
-        NameRole = Qt::UserRole + 1,
-        AsmScoreRole,
-        CppScoreRole,
-        JsScoreRole,
-        QmlScoreRole,
-        OpenGLScoreRole
+public:
+    explicit EmployeeDataModel(QObject *parent = nullptr);
+
+    // Basic functionality:
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+
+    // Editable:
+    bool setData(const QModelIndex &index, const QVariant &value,
+                 int role = Qt::EditRole) override;
+
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
+
+    virtual QHash<int, QByteArray> roleNames() const override;
+
+    // toan4.nguyen:
+    enum EMPLOYEE_DATA_ROLES {
+        EMPLOYEE_DATA_ROLES_NAME = Qt::UserRole + 1,
+        EMPLOYEE_DATA_ROLES_ASM_SCORE,
+        EMPLOYEE_DATA_ROLES_CPP_SCORE,
+        EMPLOYEE_DATA_ROLES_JS_SCORE,
+        EMPLOYEE_DATA_ROLES_QML_SCORE,
+        EMPLOYEE_DATA_ROLES_OPENGL_SCORE,
+        EMPLOYEE_DATA_ROLES_IS_SELECTED
     };
 
+    void init();
+
 private:
-    QList<EmployeeDataItem> prvEmployeeDataList;
+    QList<EmployeeDataList> prvEmployeeDataList;
 };
 
 #endif // EMPLOYEEDATAMODEL_H

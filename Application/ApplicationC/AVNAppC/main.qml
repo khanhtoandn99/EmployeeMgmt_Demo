@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
+//import EmployeeDataModel 1.0
 
 Window {
     visible: true
@@ -145,6 +146,10 @@ Window {
             isChoosing: false
         }
     }
+
+//    EmployeeDataModel {
+//        id: id_EmployeeDataModel
+//    }
 
     ListView {
         id: id_employeeList
