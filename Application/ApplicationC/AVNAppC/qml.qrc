@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>SkillDetail_Item.qml</file>
+        <file>EmployeeInList_Item.qml</file>
+    </qresource>
+</RCC>
