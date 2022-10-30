@@ -3,39 +3,13 @@
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QAbstractListModel>
+#include <QFile>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <employeedataitem.h>
 
-class TodoItem {
-public:
-    explicit TodoItem(const QString &content, const bool &isDone){
-        pContent = content;
-        pIsDone = isDone;
-    };
-
-    QString content() const{
-        return pContent;
-    }
-    bool isDone()const{
-        return pIsDone;
-    }
-
-    bool setContent(const QString &content){
-        if(pContent == content){
-            return false;
-        }
-
-        pContent = content;
-        return true;
-    }
-
-    bool setIsDone(const bool &isDone){
-        pIsDone = isDone;
-        return true;
-    }
-
-private:
-    QString pContent;
-    bool pIsDone;
-};
 
 class EmployeeDataModel: public QAbstractListModel
 {
@@ -50,6 +24,9 @@ public:
         QmlScoreRole,
         OpenGLScoreRole
     };
+
+private:
+    QList<EmployeeDataItem> prvEmployeeDataList;
 };
 
 #endif // EMPLOYEEDATAMODEL_H
