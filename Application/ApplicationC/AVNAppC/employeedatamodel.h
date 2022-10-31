@@ -2,7 +2,14 @@
 #define EMPLOYEEDATAMODEL_H
 
 #include <QAbstractListModel>
-#include "employeedatalist.h"
+
+typedef struct
+{
+    QString name;
+    double averageScore;
+    bool isSelected;
+
+} EMPLOYEE_LIST_ITEM_T;
 
 class EmployeeDataModel : public QAbstractListModel
 {
@@ -36,8 +43,9 @@ public:
     void init();
 
 private:
-    QList<EmployeeDataList> prvEmployeeDataList;
+    QVector<EMPLOYEE_LIST_ITEM_T> vEmployeeList;
 };
+
 
 
 class EmployeeDataDetailModel : public QAbstractListModel
@@ -74,18 +82,17 @@ public:
 
         // Emit signal to EmployeeDataDetailModel
         beginResetModel();
-        vEmpScore.clear();
-        vEmpScore.push_back(rand()); // Asm score
-        vEmpScore.push_back(rand()); // Cpp score
-        vEmpScore.push_back(rand()); // Js score
-        vEmpScore.push_back(rand()); // Qml score
-        vEmpScore.push_back(rand()); // OpenGl score
+        vEmployeeScore.clear();
+        vEmployeeScore.push_back(rand()); // Asm score
+        vEmployeeScore.push_back(rand()); // Cpp score
+        vEmployeeScore.push_back(rand()); // Js score
+        vEmployeeScore.push_back(rand()); // Qml score
+        vEmployeeScore.push_back(rand()); // OpenGl score
         endResetModel();
     }
 
 private:
-//    QList<EmployeeDataDetailList> prvEmployeeDataDetailList;
-    QVector<int> vEmpScore;
+    QVector<int> vEmployeeScore;
 };
 
 #endif // EMPLOYEEDATAMODEL_H

@@ -14,7 +14,7 @@ int EmployeeDataModel::rowCount(const QModelIndex &parent) const
         return 0;
 
     // FIXME: Implement me!
-    return prvEmployeeDataList.length();
+    return vEmployeeList.size();
 }
 
 QVariant EmployeeDataModel::data(const QModelIndex &index, int role) const
@@ -23,16 +23,16 @@ QVariant EmployeeDataModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     // FIXME: Implement me!
-    EmployeeDataList empDataList = prvEmployeeDataList[index.row()];
+    EMPLOYEE_LIST_ITEM_T employeeListItem = vEmployeeList[index.row()];
     switch (role) {
     case EMPLOYEE_DATA_ROLES_NAME:
-        return QString(empDataList.getName());
+        return QString(employeeListItem.name);
         break;
     case EMPLOYEE_DATA_ROLES_AVERAGE_SCORE:
-        return QVariant(empDataList.getAverageScore());
+        return QVariant(employeeListItem.averageScore);
         break;
     case EMPLOYEE_DATA_ROLES_IS_SELECTED:
-        return QVariant(empDataList.getSelectedState());
+        return QVariant(employeeListItem.isSelected);
         break;
     default:
         break;
@@ -71,9 +71,41 @@ QHash<int, QByteArray> EmployeeDataModel::roleNames() const
 void EmployeeDataModel::init()
 {
     qDebug("EmployeeDataModel::init()");
-    prvEmployeeDataList.append(EmployeeDataList("toan4.nguyen", 1.1, false));
-    prvEmployeeDataList.append(EmployeeDataList("luan1.pham", 1.2, false));
-    prvEmployeeDataList.append(EmployeeDataList("hoang1.nguyen", 1.3, false));
+    beginResetModel();
+
+    vEmployeeList.clear();
+
+    EMPLOYEE_LIST_ITEM_T empListItemTmp;
+    empListItemTmp.name = "toan4.nguyen";
+    empListItemTmp.averageScore = 1.1;
+    empListItemTmp.isSelected = false;
+    vEmployeeList.push_back(empListItemTmp);
+
+    empListItemTmp.name = "tru.vu";
+    empListItemTmp.averageScore = 2.2;
+    vEmployeeList.push_back(empListItemTmp);
+
+    empListItemTmp.name = "luan1.pham";
+    empListItemTmp.averageScore = 3.3;
+    vEmployeeList.push_back(empListItemTmp);
+
+    empListItemTmp.name = "hoang1.nguyen";
+    empListItemTmp.averageScore = 4.5;
+    vEmployeeList.push_back(empListItemTmp);
+
+    empListItemTmp.name = "viet.mac";
+    empListItemTmp.averageScore = 5.5;
+    vEmployeeList.push_back(empListItemTmp);
+
+    empListItemTmp.name = "hau.truong";
+    empListItemTmp.averageScore = 0.0;
+    vEmployeeList.push_back(empListItemTmp);
+
+    empListItemTmp.name = "phi.nguyen";
+    empListItemTmp.averageScore = 2.3;
+    vEmployeeList.push_back(empListItemTmp);
+
+    endResetModel();
 }
 
 
@@ -92,7 +124,7 @@ int EmployeeDataDetailModel::rowCount(const QModelIndex &parent) const
         return 0;
 
     // FIXME: Implement me!
-    return vEmpScore.size();
+    return vEmployeeScore.size();
 }
 
 QVariant EmployeeDataDetailModel::data(const QModelIndex &index, int role) const
@@ -101,7 +133,7 @@ QVariant EmployeeDataDetailModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     // FIXME: Implement me!
-    int empScore = vEmpScore[index.row()];
+    int empScore = vEmployeeScore[index.row()];
     switch (role) {
     case EMPLOYEE_DATA_DETAIL_ROLES_SCORE:
         return QVariant(empScore);
@@ -141,11 +173,11 @@ void EmployeeDataDetailModel::init()
 {
     qDebug("EmployeeDataDetailModel::init()");
     beginResetModel();
-    vEmpScore.clear();
-    vEmpScore.push_back(1); // Asm score
-    vEmpScore.push_back(2); // Cpp score
-    vEmpScore.push_back(3); // Js score
-    vEmpScore.push_back(4); // Qml score
-    vEmpScore.push_back(5); // OpenGl score
+    vEmployeeScore.clear();
+    vEmployeeScore.push_back(1); // Asm score
+    vEmployeeScore.push_back(2); // Cpp score
+    vEmployeeScore.push_back(3); // Js score
+    vEmployeeScore.push_back(4); // Qml score
+    vEmployeeScore.push_back(5); // OpenGl score
     endResetModel();
 }
