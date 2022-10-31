@@ -2,14 +2,7 @@
 #define EMPLOYEEDATAMODEL_H
 
 #include <QAbstractListModel>
-
-typedef struct
-{
-    QString name;
-    double averageScore;
-    bool isSelected;
-
-} EMPLOYEE_LIST_ITEM_T;
+#include "common.h"
 
 class EmployeeDataModel : public QAbstractListModel
 {
@@ -76,7 +69,6 @@ public:
 
     Q_INVOKABLE void updateDetailData(const QString &name)
     {
-        qDebug("Q_INVOKABLE void EmployeeDataDetailModel::updateDetailData()");
         // Send IPC to Service
         // onResponse from Service
 

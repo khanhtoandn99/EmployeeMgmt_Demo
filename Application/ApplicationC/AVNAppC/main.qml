@@ -3,6 +3,7 @@ import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import EmpDataModel 1.0
 import EmpDataDetailModel 1.0
+import EmpDataProxyModel 1.0
 
 Window {
     visible: true
@@ -208,16 +209,28 @@ Window {
 
     ListView {
         id: id_employeeList
-        model: id_EmployeeDataModel
+//        model: id_EmployeeDataModel
         width: 600
         height: parent.height
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: id_itemHeader.bottom
         anchors.topMargin: 10
 
+        model: EmployeeDataProxyModel {
+            id: id_EmployeeDataProxyModel
+            source: id_EmployeeDataModel
+
+            sortCaseSensitivity: Qt.CaseInsensitive
+            sortRole: id_EmployeeDataModel.count > 0 ? employeeName : ""
+
+            filterString: "*" + id_inputTextSearch.text + "*"
+            filterSyntax: EmployeeDataProxyModel.Wildcard
+            filterCaseSensitivity: Qt.CaseInsensitive
+        }
+
         delegate: EmployeeInList_Item {
             id: id_EmployeeInListItem
-            width: parent.width
+            width: 600
             height: 45
             textSize: 24
 
@@ -230,9 +243,6 @@ Window {
                 anchors.fill: parent
                 onClicked: {
                     currentEmpName = employeeName
-//                    console.log("index = " + index)
-//                    console.log("currentEmpName = " + currentEmpName)
-//                    console.log("averageScore = " + averageScore)
                     getDetailData(currentEmpName)
                 }
             }

@@ -7,6 +7,7 @@
 #include <QQmlComponent>
 
 #include "employeedatamodel.h"
+#include "employeedataproxymodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,6 +18,7 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<EmployeeDataModel>("EmpDataModel",1,0,"EmployeeDataModel");
     qmlRegisterType<EmployeeDataDetailModel>("EmpDataDetailModel",1,0,"EmployeeDataDetailModel");
+    qmlRegisterType<EmployeeDataProxyModel>("EmpDataProxyModel",1,0,"EmployeeDataProxyModel");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
