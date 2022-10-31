@@ -7,29 +7,14 @@ class EmployeeDataList
 {
 public:
     explicit EmployeeDataList(const QString &name = ""
-                            ,const int &asmScore = 0
-                            ,const int &cppScore = 0
-                            ,const int &jsScore = 0
-                            ,const int &qmlScore = 0
-                            ,const int &openglScore = 0
                             ,const double &averageScore = 0.0
                             ,const bool &isSelected = false);
 
     bool setName(const QString &name);
-    bool setAsmScore(const int &asmScore);
-    bool setCppScore(const int &cppScore);
-    bool setJsScore(const int &jsScore);
-    bool setQmlScore(const int &qmlScore);
-    bool setOpenglScore(const int &openglScore);
     bool setAverageScore(const double &averageScore);
     bool setSelectedState(const bool &isSelected);
 
     QString getName();
-    int getAsmScore();
-    int getCppScore();
-    int getJsScore();
-    int getQmlScore();
-    int getOpenglScore();
     double getAverageScore();
     bool getSelectedState();
 
@@ -37,13 +22,23 @@ signals:
 
 private:
     QString prvName;
-    int prvAsmScore;
-    int prvCppScore;
-    int prvJsScore;
-    int prvQmlScore;
-    int prvOpenglScore;
     double prvAverageScore;
     bool prvIsSelected;
+};
+
+class EmployeeDataDetailList
+{
+public:
+    explicit EmployeeDataDetailList(const int &score = 0);
+
+    bool setScore(const int &score);
+
+    int getScore();
+
+signals:
+
+private:
+    int prvScore;
 };
 
 #endif // EMPLOYEEDATALIST_H

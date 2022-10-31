@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import EmpDataModel 1.0
+import EmpDataDetailModel 1.0
 
 Window {
     visible: true
@@ -14,13 +15,36 @@ Window {
     title: "AVN Application C"
 
     property int lastEmployeeIndexChoosen: 0
+    property string currentEmpName: "value"
+    property int currentEmpAsmScore: 0
+    property int currentEmpCppScore: 0
+    property int currentEmpJsScore: 0
+    property int currentEmpQmlScore: 0
+    property int currentEmpOpenglScore: 0
+
+    signal getDetailData(string name)
+
 
     EmployeeDataModel {
         id: id_EmployeeDataModel
     }
 
+    EmployeeDataDetailModel {
+        id: id_EmployeeDataDetailModel
+    }
+
+    Text {
+        id: id_employeeNameOnTitle
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: 20
+        font.pixelSize: 32
+        font.bold: true
+        text: currentEmpName
+    }
+
+    // Start Icon Language and Name View
     ListModel {
-        id: id_skillDetailModel
+        id: id_skillNameModel
         ListElement {
             iImgIconLanguageSource: "file:///home/avn/Desktop/LG_AVN_TEST/Application/Images/icon_asm.png"
             iTextSkillName: "Assembly"
@@ -43,22 +67,44 @@ Window {
         }
     }
 
-    ListView { // Employee Skill Detail
-        id: id_skillDetailList
+    ListView {
+        id: id_skillIconNameList
+        model: id_skillNameModel
+        width: 200
+        height: 400
         x: 100
         y: 100
         spacing: 5
-        width: parent.width
-        height: 400
-        model: id_skillDetailModel
-        delegate: SkillDetail_Item {
-            height: 30
+
+        delegate: SkillNameView_Item {
+            height: 24
+            heightSize: height
             textSize: 24
             imgLanguageIconSource: iImgIconLanguageSource
             textSkillName: iTextSkillName
         }
     }
+    // End Icon Language and Name View
 
+    //Start Score Input
+    ListView {
+        id: id_skillScoreInputList
+        model: id_EmployeeDataDetailModel
+        height: 400
+        y: 100
+        anchors.left: id_skillIconNameList.right
+        spacing: 5
+
+        delegate: SkillScoreInput_Item {
+            height: 24
+            heightSize: height
+            textSize: 24
+            textCurrentScore: skillScore.toString()
+        }
+    }
+    // End Score Input
+
+    // Start Update Button:
     Rectangle {
         id: id_buttonUpdate
         anchors.horizontalCenter: parent.horizontalCenter
@@ -84,7 +130,9 @@ Window {
             onReleased: id_buttonUpdate.color = "green"
         }
     }
+    // End Update Button
 
+    // Start List Employee Header
     Item {
         id: id_itemHeader
         width: 400
@@ -116,6 +164,7 @@ Window {
             horizontalAlignment: "AlignHCenter"
         }
     }
+    // End List Employee Header
 
     ListView {
         id: id_employeeList
@@ -138,11 +187,17 @@ Window {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    id_EmployeeInListItem.employeeIndex = index
-                    id_EmployeeInListItem.isChoosing = true
-                    lastEmployeeIndexChoosen = index
+                    currentEmpName = employeeName
+//                    console.log("index = " + index)
+//                    console.log("currentEmpName = " + currentEmpName)
+//                    console.log("averageScore = " + averageScore)
+                    getDetailData(currentEmpName)
                 }
             }
         }
+    }
+
+    onGetDetailData: {
+        id_EmployeeDataDetailModel.updateDetailData(name)
     }
 }

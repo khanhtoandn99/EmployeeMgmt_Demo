@@ -1,6 +1,11 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 
+#include <QQuickView>
+#include <QQmlEngine>
+#include <QQmlContext>
+#include <QQmlComponent>
+
 #include "employeedatamodel.h"
 
 int main(int argc, char *argv[])
@@ -11,6 +16,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     qmlRegisterType<EmployeeDataModel>("EmpDataModel",1,0,"EmployeeDataModel");
+    qmlRegisterType<EmployeeDataDetailModel>("EmpDataDetailModel",1,0,"EmployeeDataDetailModel");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
@@ -20,10 +26,26 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
 
-//    qmlRegisterType<EmployeeDataModel>("EmployeeDataModel",1,0,"EmployeeDataModel");
-
     engine.load(url);
 
     return app.exec();
+
+
+//    // Method 2:
+
+//    qmlRegisterType<EmployeeDataModel>("EmpDataModel",1,0,"EmployeeDataModel");
+//    qmlRegisterType<EmployeeDataDetailModel>("EmpDataDetailModel",1,0,"EmployeeDataDetailModel");
+
+//    EmployeeDataModel EmpDataModel;
+//    EmployeeDataDetailModel EmpDataDetailModel;
+
+//    QQuickView view;
+//    QQmlContext *context = view.engine()->rootContext();
+//    context->setContextProperty("EmployeeDataDetailModel", &EmpDataModel);
+
+//    view.setSource(QUrl("qrc:main.qml"));
+//    view.show();
+
+//    return app.exec();
 
 }
