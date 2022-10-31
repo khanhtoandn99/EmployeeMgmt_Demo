@@ -25,7 +25,7 @@ Item {
         width: parent.height - parent.height*5/100
         height: parent.height - parent.height*5/100
         anchors.left: id_textInputScore.right
-        anchors.leftMargin: 10
+        anchors.leftMargin: 30
         anchors.verticalCenter: id_textInputScore.verticalCenter
         source: parseInt(id_textInputScore.text) > 2 ? "file:///home/avn/Desktop/LG_AVN_TEST/Application/Images/icon_greentick.png"
                                                      : "file:///home/avn/Desktop/LG_AVN_TEST/Application/Images/icon_redtick1.png"

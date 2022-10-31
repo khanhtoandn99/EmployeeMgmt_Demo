@@ -23,7 +23,7 @@ Item {
         width: 200
         height: heightSize
         anchors.left: id_imgLanguageIcon.right
-        anchors.leftMargin: 10
+        anchors.leftMargin: 30
         anchors.verticalCenter: id_imgLanguageIcon.verticalCenter
 
         font.pixelSize: textSize

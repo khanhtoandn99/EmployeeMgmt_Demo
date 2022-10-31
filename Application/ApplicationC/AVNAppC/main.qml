@@ -6,12 +6,10 @@ import EmpDataDetailModel 1.0
 
 Window {
     visible: true
-    width: 600
-    height: 800
-    maximumHeight: 800
-    minimumHeight: 800
-    maximumWidth: 600
-    minimumWidth: 600
+    maximumWidth: 900
+    minimumWidth: 900
+    maximumHeight: 1200
+    minimumHeight: 1200
     title: "AVN Application C"
 
     property int lastEmployeeIndexChoosen: 0
@@ -36,8 +34,8 @@ Window {
     Text {
         id: id_employeeNameOnTitle
         anchors.horizontalCenter: parent.horizontalCenter
-        y: 20
-        font.pixelSize: 32
+        y: 100
+        font.pixelSize: 48
         font.bold: true
         text: currentEmpName
     }
@@ -70,16 +68,16 @@ Window {
     ListView {
         id: id_skillIconNameList
         model: id_skillNameModel
-        width: 200
+        width: 300
         height: 400
-        x: 100
-        y: 100
-        spacing: 5
+        x: 200
+        y: 200
+        spacing: 10
 
         delegate: SkillNameView_Item {
-            height: 24
+            height: 36
             heightSize: height
-            textSize: 24
+            textSize: 36
             imgLanguageIconSource: iImgIconLanguageSource
             textSkillName: iTextSkillName
         }
@@ -91,14 +89,14 @@ Window {
         id: id_skillScoreInputList
         model: id_EmployeeDataDetailModel
         height: 400
-        y: 100
+        y: 200
         anchors.left: id_skillIconNameList.right
-        spacing: 5
+        spacing: 10
 
         delegate: SkillScoreInput_Item {
-            height: 24
+            height: 36
             heightSize: height
-            textSize: 24
+            textSize: 36
             textCurrentScore: skillScore.toString()
         }
     }
@@ -108,16 +106,16 @@ Window {
     Rectangle {
         id: id_buttonUpdate
         anchors.horizontalCenter: parent.horizontalCenter
-        y: 300
-        width: 150
-        height: 30
+        y: 500
+        width: 300
+        height: 50
         color: "green"
         radius: 10
         Text {
             id: id_buttonTextUpdate
             anchors.fill: parent
             text: "UPDATE"
-            font.pixelSize: 20
+            font.pixelSize: 36
             color: "white"
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
@@ -132,20 +130,62 @@ Window {
     }
     // End Update Button
 
+    // Start Search Name Input
+    Item {
+        id: id_SearchBar
+        width: parent.width
+        height: 50
+        anchors.top: id_buttonUpdate.bottom
+        anchors.topMargin: 20
+        anchors.horizontalCenter: parent.horizontalCenter
+        Text {
+            id: id_textSearchName
+            width: 180
+            height: parent.height
+            anchors.left: parent.left
+            anchors.leftMargin: 20
+            verticalAlignment: Text.AlignVCenter
+            font.pixelSize: 28
+            text: qsTr("Search Name: ")
+        }
+
+        Rectangle {
+            width: parent.width-id_textSearchName.width
+            height: parent.height
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: id_textSearchName.right
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            border.width: 5
+            border.color: "#87CEEB"
+            TextInput {
+                id: id_inputTextSearch
+                anchors.fill: parent
+                anchors.leftMargin: 20
+                font.pixelSize: 28
+                verticalAlignment: Text.AlignVCenter
+                color: "black"
+            }
+        }
+    }
+    // End Search Name Input
+
+
     // Start List Employee Header
     Item {
         id: id_itemHeader
-        width: 400
-        height: 20
-        x: 100
-        y: 380
+        width: 600
+        height: 40
+        anchors.top: id_SearchBar.bottom
+        anchors.topMargin: 20
+        anchors.horizontalCenter: parent.horizontalCenter
         // Header: NAME
         Text {
             id: id_textEmployeeList_NameHeader
             width: parent.width*3/4
             height: parent.height
             color: "black"
-            font.pixelSize: 13
+            font.pixelSize: 28
             font.bold: true
 
             text: "NAME"
@@ -157,7 +197,7 @@ Window {
             height: parent.height
             anchors.left: id_textEmployeeList_NameHeader.right
             color: "black"
-            font.pixelSize: 13
+            font.pixelSize: 28
             font.bold: true
 
             text: "AVERAGE"
@@ -169,15 +209,17 @@ Window {
     ListView {
         id: id_employeeList
         model: id_EmployeeDataModel
+        width: 600
         height: parent.height
-        x: 100
-        y: 400
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: id_itemHeader.bottom
+        anchors.topMargin: 10
 
         delegate: EmployeeInList_Item {
             id: id_EmployeeInListItem
-            width: 400
-            height: 18
-            textSize: 13
+            width: parent.width
+            height: 45
+            textSize: 24
 
             // Get from model:
             textEmployeeName: employeeName
