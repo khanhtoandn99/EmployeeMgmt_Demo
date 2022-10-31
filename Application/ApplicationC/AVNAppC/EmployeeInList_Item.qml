@@ -3,7 +3,7 @@ import QtQuick 2.0
 Item {
     // Data properties
     property string textEmployeeName: "value"
-    property string averageScore: "value"
+    property string textAverageScore: "value"
     property int employeeIndex: 0
 
     // Dimension properties

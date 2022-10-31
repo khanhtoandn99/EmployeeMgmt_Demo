@@ -12,6 +12,7 @@ public:
                             ,const int &jsScore = 0
                             ,const int &qmlScore = 0
                             ,const int &openglScore = 0
+                            ,const double &averageScore = 0.0
                             ,const bool &isSelected = false);
 
     bool setName(const QString &name);
@@ -20,6 +21,7 @@ public:
     bool setJsScore(const int &jsScore);
     bool setQmlScore(const int &qmlScore);
     bool setOpenglScore(const int &openglScore);
+    bool setAverageScore(const double &averageScore);
     bool setSelectedState(const bool &isSelected);
 
     QString getName();
@@ -28,6 +30,7 @@ public:
     int getJsScore();
     int getQmlScore();
     int getOpenglScore();
+    double getAverageScore();
     bool getSelectedState();
 
 signals:
@@ -39,6 +42,7 @@ private:
     int prvJsScore;
     int prvQmlScore;
     int prvOpenglScore;
+    double prvAverageScore;
     bool prvIsSelected;
 };
 

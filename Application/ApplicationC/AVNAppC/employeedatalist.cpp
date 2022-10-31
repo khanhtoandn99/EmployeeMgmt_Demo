@@ -6,6 +6,7 @@ EmployeeDataList::EmployeeDataList(const QString &name
                                    ,const int &jsScore
                                    ,const int &qmlScore
                                    ,const int &openglScore
+                                   ,const double &averageScore
                                    ,const bool &isSelected)
 {
     prvName = name;
@@ -14,6 +15,7 @@ EmployeeDataList::EmployeeDataList(const QString &name
     prvJsScore = jsScore;
     prvQmlScore = qmlScore;
     prvOpenglScore = openglScore;
+    prvAverageScore = averageScore;
     prvIsSelected = isSelected;
 }
 
@@ -55,6 +57,12 @@ bool EmployeeDataList::setOpenglScore(const int &openglScore)
     return true;
 }
 
+bool EmployeeDataList::setAverageScore(const double &averageScore)
+{
+    prvAverageScore = averageScore;
+    return true;
+}
+
 bool EmployeeDataList::setSelectedState(const bool &isSelected)
 {
     prvIsSelected = isSelected;
@@ -90,6 +98,11 @@ int EmployeeDataList::getQmlScore()
 int EmployeeDataList::getOpenglScore()
 {
     return prvOpenglScore;
+}
+
+double EmployeeDataList::getAverageScore()
+{
+    return prvAverageScore;
 }
 
 bool EmployeeDataList::getSelectedState()

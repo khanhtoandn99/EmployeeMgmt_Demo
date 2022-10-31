@@ -1,7 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
-//import EmployeeDataModel 1.0
+import EmpDataModel 1.0
 
 Window {
     visible: true
@@ -14,6 +14,10 @@ Window {
     title: "AVN Application C"
 
     property int lastEmployeeIndexChoosen: 0
+
+    EmployeeDataModel {
+        id: id_EmployeeDataModel
+    }
 
     ListModel {
         id: id_skillDetailModel
@@ -113,47 +117,9 @@ Window {
         }
     }
 
-    ListModel {
-        id: id_employeeModel
-        ListElement {
-            content: "toan4.nguyen"
-            score: "0.0"
-            isChoosing: false
-        }
-        ListElement {
-            content: "luan1.pham"
-            score: "0.0"
-            isChoosing: false
-        }
-        ListElement {
-            content: "hoang1.nguyen"
-            score: "0.0"
-            isChoosing: false
-        }
-        ListElement {
-            content: "viet.mac"
-            score: "0.0"
-            isChoosing: false
-        }
-        ListElement {
-            content: "tru.vu"
-            score: "0.0"
-            isChoosing: false
-        }
-        ListElement {
-            content: "hoang2.truong"
-            score: "0.0"
-            isChoosing: false
-        }
-    }
-
-//    EmployeeDataModel {
-//        id: id_EmployeeDataModel
-//    }
-
     ListView {
         id: id_employeeList
-        model: id_employeeModel
+        model: id_EmployeeDataModel
         height: parent.height
         x: 100
         y: 400
@@ -165,17 +131,15 @@ Window {
             textSize: 13
 
             // Get from model:
-            textEmployeeName: content
-            averageScore: score
-            isChoosing: isChoosing
+            textEmployeeName: employeeName
+            textAverageScore: averageScore.toString()
+//            isChoosing: isSelected
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
                     id_EmployeeInListItem.employeeIndex = index
                     id_EmployeeInListItem.isChoosing = true
-                    // unChossen
-//                    id_EmployeeInListItem.isChoosing = false // this code failed ==> maybe implement in C++
                     lastEmployeeIndexChoosen = index
                 }
             }
