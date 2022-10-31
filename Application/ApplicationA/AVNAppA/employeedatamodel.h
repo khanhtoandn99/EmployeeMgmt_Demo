@@ -3,8 +3,6 @@
 
 #include <QAbstractListModel>
 #include "common.h"
-#include <sys/ipc.h>
-#include <sys/msg.h>
 
 class EmployeeDataModel : public QAbstractListModel
 {
@@ -69,7 +67,21 @@ public:
 
     void init();
 
-    Q_INVOKABLE void updateDetailData(const QString &name);
+    Q_INVOKABLE void updateDetailData(const QString &name)
+    {
+        // Send IPC to Service
+        // onResponse from Service
+
+        // Emit signal to EmployeeDataDetailModel
+        beginResetModel();
+        vEmployeeScore.clear();
+        vEmployeeScore.push_back(rand()%5); // Asm score
+        vEmployeeScore.push_back(rand()%5); // Cpp score
+        vEmployeeScore.push_back(rand()%5); // Js score
+        vEmployeeScore.push_back(rand()%5); // Qml score
+        vEmployeeScore.push_back(rand()%5); // OpenGl score
+        endResetModel();
+    }
 
 private:
     QVector<int> vEmployeeScore;

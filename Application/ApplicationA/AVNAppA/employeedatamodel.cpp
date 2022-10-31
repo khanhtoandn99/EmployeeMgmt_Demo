@@ -181,19 +181,3 @@ void EmployeeDataDetailModel::init()
     vEmployeeScore.push_back(5); // OpenGl score
     endResetModel();
 }
-
-Q_INVOKABLE void EmployeeDataDetailModel::updateDetailData(const QString &name)
-{
-    // Send IPC to Service
-    // onResponse from Service
-
-    // Emit signal to EmployeeDataDetailModel
-    beginResetModel();
-    vEmployeeScore.clear();
-    vEmployeeScore.push_back(rand()); // Asm score
-    vEmployeeScore.push_back(rand()); // Cpp score
-    vEmployeeScore.push_back(rand()); // Js score
-    vEmployeeScore.push_back(rand()); // Qml score
-    vEmployeeScore.push_back(rand()); // OpenGl score
-    endResetModel();
-}

@@ -3,6 +3,6 @@
         <file>main.qml</file>
         <file>EmployeeInList_Item.qml</file>
         <file>SkillNameView_Item.qml</file>
-        <file>SkillScoreInput_Item.qml</file>
+        <file>SkillScoreView_Item.qml</file>
     </qresource>
 </RCC>

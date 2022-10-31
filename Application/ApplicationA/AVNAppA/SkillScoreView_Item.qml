@@ -8,15 +8,12 @@ Item {
     // Get from Model:
     property string textCurrentScore: "0"
 
-    TextInput {
+    Text {
         id: id_textInputScore
         width: 80
         height: parent.height
-        cursorVisible: true
-        cursorPosition: 0
         font.pixelSize: textSize
         verticalAlignment: Text.AlignVCenter
-        maximumLength: 1
         text: textCurrentScore
     }
 

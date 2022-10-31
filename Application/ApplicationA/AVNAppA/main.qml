@@ -11,7 +11,7 @@ Window {
     minimumWidth: 900
     maximumHeight: 1200
     minimumHeight: 1200
-    title: "AVN Application C (Editor)"
+    title: "AVN Application A (View)"
 
     property int lastEmployeeIndexChoosen: 0
     property string currentEmpName: "value"
@@ -94,7 +94,7 @@ Window {
         anchors.left: id_skillIconNameList.right
         spacing: 10
 
-        delegate: SkillScoreInput_Item {
+        delegate: SkillScoreView_Item {
             height: 36
             heightSize: height
             textSize: 36
@@ -115,7 +115,7 @@ Window {
         Text {
             id: id_buttonTextUpdate
             anchors.fill: parent
-            text: "UPDATE"
+            text: "REFRESH"
             font.pixelSize: 36
             color: "white"
             font.bold: true
