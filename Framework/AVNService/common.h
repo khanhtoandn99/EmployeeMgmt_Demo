@@ -2,8 +2,9 @@
 #define COMMON_H_
 
 #define EMPLOYEE_NAME_MAXSIZE 100
+#define EMPLOYEE_IN_LIST_MODEL_MAX 10 // 10 employee data support
 
-#define EMPLOYEE_DATA_MODEL_FILE_PATH "empdatamodel.txt"
+#define EMPLOYEE_DATA_MODEL_FILE_PATH "/home/avn/Desktop/LG_AVN_TEST/Framework/AVNService/empdatamodel.txt"
 
 typedef struct
 {

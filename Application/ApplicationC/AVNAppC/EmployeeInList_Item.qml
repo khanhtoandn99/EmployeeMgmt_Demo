@@ -39,8 +39,8 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             font.pixelSize: textSize
             color: "black"
+            text: averageScore.toString().substr(0,4)
 
-            text: averageScore
         }
     }
 

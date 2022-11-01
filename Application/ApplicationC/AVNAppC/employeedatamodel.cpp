@@ -92,8 +92,8 @@ void EmployeeDataModel::init()
         empListItemTmp.name = QString::fromUtf8(aEmpDataTmp[i].name);
         empListItemTmp.averageScore = aEmpDataTmp[i].average;
         empListItemTmp.isSelected = aEmpDataTmp[i].isSelected;
-        qDebug() << "empListItemTmp.name; = " << empListItemTmp.name;
-        qDebug("empListItemTmp.averageScore = %f", empListItemTmp.averageScore);
+        qDebug() << "empListItemTmp.name = " << empListItemTmp.name;
+        qDebug("empListItemTmp.averageScore = %.2f", empListItemTmp.averageScore);
         qDebug("empListItemTmp.isSelected = %d", empListItemTmp.isSelected);
         vEmployeeList.push_back(empListItemTmp);
     }

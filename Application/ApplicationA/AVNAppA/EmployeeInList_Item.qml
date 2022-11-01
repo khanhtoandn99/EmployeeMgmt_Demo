@@ -40,7 +40,7 @@ Item {
             font.pixelSize: textSize
             color: "black"
 
-            text: averageScore
+            text: averageScore.toString().substr(0,4)
         }
     }
 

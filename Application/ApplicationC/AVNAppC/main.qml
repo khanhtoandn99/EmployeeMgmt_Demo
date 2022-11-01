@@ -4,6 +4,7 @@ import QtQuick.Controls 2.15
 import EmpDataModel 1.0
 import EmpDataDetailModel 1.0
 import EmpDataProxyModel 1.0
+import AppHMIService 1.0
 
 Window {
     visible: true
@@ -30,6 +31,9 @@ Window {
 
     EmployeeDataDetailModel {
         id: id_EmployeeDataDetailModel
+    }
+    AppHMIService {
+        id: id_AppHMIService
     }
 
     Text {
@@ -237,13 +241,13 @@ Window {
             // Get from model:
             textEmployeeName: employeeName
             textAverageScore: averageScore.toString()
-//            isChoosing: isSelected
+            isChoosing: isSelected
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
                     currentEmpName = employeeName
-                    getDetailData(currentEmpName)
+                    id_AppHMIService.getEmpDetailData(currentEmpName)
                 }
             }
         }
