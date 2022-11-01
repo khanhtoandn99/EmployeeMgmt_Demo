@@ -1,17 +1,9 @@
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef COMMON_H_
+#define COMMON_H_
 
-#include <QVariant>
 #define EMPLOYEE_NAME_MAXSIZE 100
 
-typedef struct
-{
-    QString name;
-    double averageScore;
-    bool isSelected;
-
-} EMPLOYEE_LIST_ITEM_T;
-
+#define EMPLOYEE_DATA_MODEL_FILE_PATH "empdatamodel.txt"
 
 typedef struct
 {
@@ -24,6 +16,7 @@ typedef struct
     int openglScore;
     float average;
     bool isSelected;
+
 } EMPLOYEE_DATA_T;
 
-#endif // COMMON_H
+#endif

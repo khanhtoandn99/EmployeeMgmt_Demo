@@ -2,9 +2,13 @@
 #define EMPLOYEEDATAMODEL_H
 
 #include <QAbstractListModel>
+#include <qdebug.h>
 #include "common.h"
+#include <cstring>
+
+// IPC
 #include <sys/ipc.h>
-#include <sys/msg.h>
+#include <sys/shm.h>
 
 class EmployeeDataModel : public QAbstractListModel
 {

@@ -71,41 +71,38 @@ QHash<int, QByteArray> EmployeeDataModel::roleNames() const
 void EmployeeDataModel::init()
 {
     qDebug("EmployeeDataModel::init()");
-    beginResetModel();
 
+    beginResetModel();
     vEmployeeList.clear();
 
+    key_t key = ftok("shmfile",65);
+    int shmid = shmget(key,4096,0666|IPC_CREAT);
+    EMPLOYEE_DATA_T *empDataPtr = (EMPLOYEE_DATA_T*) shmat(shmid,(void*)0,0);
+
     EMPLOYEE_LIST_ITEM_T empListItemTmp;
-    empListItemTmp.name = "toan4.nguyen";
-    empListItemTmp.averageScore = 1.1;
-    empListItemTmp.isSelected = false;
-    vEmployeeList.push_back(empListItemTmp);
+    if (empDataPtr == nullptr) {
+        qDebug() << "empDataPtr is nullptr";
+        return;
+    }
+    EMPLOYEE_DATA_T aEmpDataTmp[10];
+    memcpy(aEmpDataTmp, empDataPtr, sizeof(EMPLOYEE_DATA_T)*10);
 
-    empListItemTmp.name = "tru.vu";
-    empListItemTmp.averageScore = 2.2;
-    vEmployeeList.push_back(empListItemTmp);
-
-    empListItemTmp.name = "luan1.pham";
-    empListItemTmp.averageScore = 3.3;
-    vEmployeeList.push_back(empListItemTmp);
-
-    empListItemTmp.name = "hoang1.nguyen";
-    empListItemTmp.averageScore = 4.5;
-    vEmployeeList.push_back(empListItemTmp);
-
-    empListItemTmp.name = "viet.mac";
-    empListItemTmp.averageScore = 5.5;
-    vEmployeeList.push_back(empListItemTmp);
-
-    empListItemTmp.name = "hau.truong";
-    empListItemTmp.averageScore = 0.0;
-    vEmployeeList.push_back(empListItemTmp);
-
-    empListItemTmp.name = "phi.nguyen";
-    empListItemTmp.averageScore = 2.3;
-    vEmployeeList.push_back(empListItemTmp);
-
+    for (int i = 0; i < 10; ++i)
+    {
+        empListItemTmp.name = QString::fromUtf8(aEmpDataTmp[i].name);
+        empListItemTmp.averageScore = aEmpDataTmp[i].average;
+        empListItemTmp.isSelected = aEmpDataTmp[i].isSelected;
+        qDebug() << "empListItemTmp.name; = " << empListItemTmp.name;
+        qDebug("empListItemTmp.averageScore = %f", empListItemTmp.averageScore);
+        qDebug("empListItemTmp.isSelected = %d", empListItemTmp.isSelected);
+        vEmployeeList.push_back(empListItemTmp);
+    }
+    qDebug("Init data from Shm completed");
     endResetModel();
+
+    //detach from shared memory
+    shmdt(empDataPtr);
+
 }
 
 
@@ -172,14 +169,22 @@ QHash<int, QByteArray> EmployeeDataDetailModel::roleNames() const
 void EmployeeDataDetailModel::init()
 {
     qDebug("EmployeeDataDetailModel::init()");
+
+    key_t key = ftok("shmfile",65);
+    int shmid = shmget(key,4096,0666|IPC_CREAT);
+    EMPLOYEE_DATA_T *empDataPtr = (EMPLOYEE_DATA_T*) shmat(shmid,(void*)0,0);
+
     beginResetModel();
     vEmployeeScore.clear();
-    vEmployeeScore.push_back(1); // Asm score
-    vEmployeeScore.push_back(2); // Cpp score
-    vEmployeeScore.push_back(3); // Js score
-    vEmployeeScore.push_back(4); // Qml score
-    vEmployeeScore.push_back(5); // OpenGl score
+    vEmployeeScore.push_back(empDataPtr[0].asmScore); // Asm score
+    vEmployeeScore.push_back(empDataPtr[0].cppScore); // Cpp score
+    vEmployeeScore.push_back(empDataPtr[0].jsScore); // Js score
+    vEmployeeScore.push_back(empDataPtr[0].qmlScore); // Qml score
+    vEmployeeScore.push_back(empDataPtr[0].openglScore); // OpenGl score
     endResetModel();
+
+    //detach from shared memory
+    shmdt(empDataPtr);
 }
 
 Q_INVOKABLE void EmployeeDataDetailModel::updateDetailData(const QString &name)

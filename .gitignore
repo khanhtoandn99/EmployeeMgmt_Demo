@@ -2,3 +2,6 @@
 /Application/ApplicationC/.DS_Store
 /Application/Images/.DS_Store
 /Application/ApplicationA/build-AVNAppA-Desktop_Qt_5_15_2_GCC_64bit-Debug
+
+/Framework/AVNServiceB/.vscode
+/Framework/AVNServiceB/*.exe
