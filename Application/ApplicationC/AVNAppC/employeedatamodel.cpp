@@ -25,6 +25,9 @@ QVariant EmployeeDataModel::data(const QModelIndex &index, int role) const
     // FIXME: Implement me!
     EMPLOYEE_LIST_ITEM_T employeeListItem = vEmployeeList[index.row()];
     switch (role) {
+    case EMPLOYEE_DATA_ROLES_ID:
+        return QString(employeeListItem.id);
+        break;
     case EMPLOYEE_DATA_ROLES_NAME:
         return QString(employeeListItem.name);
         break;
@@ -61,6 +64,7 @@ Qt::ItemFlags EmployeeDataModel::flags(const QModelIndex &index) const
 QHash<int, QByteArray> EmployeeDataModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
+    roles[EMPLOYEE_DATA_ROLES_ID] = "employeeId";
     roles[EMPLOYEE_DATA_ROLES_NAME] = "employeeName";
     roles[EMPLOYEE_DATA_ROLES_AVERAGE_SCORE] = "averageScore";
     roles[EMPLOYEE_DATA_ROLES_IS_SELECTED] = "isSelected";
@@ -89,9 +93,11 @@ void EmployeeDataModel::init()
 
     for (int i = 0; i < 10; ++i)
     {
+        empListItemTmp.id = aEmpDataTmp[i].id;
         empListItemTmp.name = QString::fromUtf8(aEmpDataTmp[i].name);
         empListItemTmp.averageScore = aEmpDataTmp[i].average;
         empListItemTmp.isSelected = aEmpDataTmp[i].isSelected;
+        qDebug("empListItemTmp.id = %d", empListItemTmp.id);
         qDebug() << "empListItemTmp.name = " << empListItemTmp.name;
         qDebug("empListItemTmp.averageScore = %.2f", empListItemTmp.averageScore);
         qDebug("empListItemTmp.isSelected = %d", empListItemTmp.isSelected);
@@ -187,7 +193,7 @@ void EmployeeDataDetailModel::init()
     shmdt(empDataPtr);
 }
 
-Q_INVOKABLE void EmployeeDataDetailModel::updateDetailData(const QString &name)
+void EmployeeDataDetailModel::updateDetailData(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore)
 {
     // Send IPC to Service
     // onResponse from Service
@@ -195,10 +201,22 @@ Q_INVOKABLE void EmployeeDataDetailModel::updateDetailData(const QString &name)
     // Emit signal to EmployeeDataDetailModel
     beginResetModel();
     vEmployeeScore.clear();
-    vEmployeeScore.push_back(rand()); // Asm score
-    vEmployeeScore.push_back(rand()); // Cpp score
-    vEmployeeScore.push_back(rand()); // Js score
-    vEmployeeScore.push_back(rand()); // Qml score
-    vEmployeeScore.push_back(rand()); // OpenGl score
+    vEmployeeScore.push_back(asmScore); // Asm score
+    vEmployeeScore.push_back(cppScore); // Cpp score
+    vEmployeeScore.push_back(jsScore); // Js score
+    vEmployeeScore.push_back(qmlScore); // Qml score
+    vEmployeeScore.push_back(openglScore); // OpenGl score
+    endResetModel();
+}
+
+void EmployeeDataDetailModel::slotUpdateScoreModel(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore)
+{
+    beginResetModel();
+    vEmployeeScore.clear();
+    vEmployeeScore.push_back(asmScore); // Asm score
+    vEmployeeScore.push_back(cppScore); // Cpp score
+    vEmployeeScore.push_back(jsScore); // Js score
+    vEmployeeScore.push_back(qmlScore); // Qml score
+    vEmployeeScore.push_back(openglScore); // OpenGl score
     endResetModel();
 }

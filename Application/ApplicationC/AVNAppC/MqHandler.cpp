@@ -2,8 +2,9 @@
 
 MqHandler::MqHandler()
 {
-    m_mqKey = ftok("progfile", 65);
+    m_mqKey = ftok(MQ_KEY_FTOK_FILEPATH, 65);
     m_mqMsgid = msgget(m_mqKey, 0666 | IPC_CREAT);
+    qDebug() << __func__ << "<< m_mqMsgid = " << m_mqMsgid;
 }
 
 void MqHandler::send(const MQ_MSG_DATA_T &msgData)

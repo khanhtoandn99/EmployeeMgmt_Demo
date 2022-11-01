@@ -22,6 +22,9 @@ int main(int argc, char *argv[])
     qmlRegisterType<EmployeeDataProxyModel>("EmpDataProxyModel",1,0,"EmployeeDataProxyModel");
     qmlRegisterType<AppHMIService>("AppHMIService", 1, 0, "AppHMIService");
 
+//    connect(m_pPopupService, SIGNAL(signalSystemUIThemeUpdate(const E_UI_THEME)),
+//            m_pPopupHMI, SLOT(slotSystemUIThemeUpdate(const E_UI_THEME)));
+
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
 

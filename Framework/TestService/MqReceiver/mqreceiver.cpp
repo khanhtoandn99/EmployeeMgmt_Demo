@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <cstring>
   
 enum E_MQ_MSG_TYPE : long
 {
@@ -42,6 +43,7 @@ int main()
             // msgctl(msgid, IPC_RMID, NULL);
             // msgid = msgget(key, 0666 | IPC_CREAT);
             printf("New msgid = %d\n", msgid);
+            memset(&message, 0x0, sizeof(MQ_MSG_DATA_T));
         }
     }
   

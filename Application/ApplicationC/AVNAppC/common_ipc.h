@@ -7,18 +7,21 @@
 #define MQ_KEY_FTOK_FILEPATH "/home/avn/Desktop/LG_AVN_TEST/progfile"
 #define MQ_MSG_DATA_MAX 100 //bytes
 
+#define MQ_CLIENTPATH_AVNAPPA "Application/AVNAppA"
+#define MQ_CLIENTPATH_AVNAPPC "Application/AVNAppC"
+#define MQ_CLIENTPATH_AVNSERVICE "Application/AVNService"
+
 // For Message Queue:
 enum E_MQ_MSG_TYPE : long // long type is important for MQ
 {
-    E_MQ_MSG_TYPE_SET,
-    E_MQ_MSG_TYPE_GET,
-    E_MQ_MSG_TYPE_ON
+    E_MQ_MSG_TYPE_REQUESTGETSCOREDATA = 1,
+    E_MQ_MSG_TYPE_ONRESPONSESCOREDATA,
 };
 
 typedef struct
 {
     E_MQ_MSG_TYPE msg_type;
-    char msg_text[100];
+    char msg_text[MQ_MSG_DATA_MAX];
 
 } MQ_MSG_DATA_T;
 

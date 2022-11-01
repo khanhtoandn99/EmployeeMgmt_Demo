@@ -34,6 +34,10 @@ Window {
     }
     AppHMIService {
         id: id_AppHMIService
+        onSignalUpdateScoreModel: {
+            console.log("onSignalUpdateScoreModel")
+            id_EmployeeDataDetailModel.updateDetailData(asmScore, cppScore, jsScore, qmlScore, openglScore)
+        }
     }
 
     Text {
@@ -247,13 +251,9 @@ Window {
                 anchors.fill: parent
                 onClicked: {
                     currentEmpName = employeeName
-                    id_AppHMIService.getEmpDetailData(currentEmpName)
+                    id_AppHMIService.requestGetScoreData(index, currentEmpName)
                 }
             }
         }
-    }
-
-    onGetDetailData: {
-        id_EmployeeDataDetailModel.updateDetailData(name)
     }
 }

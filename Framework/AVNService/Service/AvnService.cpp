@@ -3,6 +3,8 @@
 AvnService::AvnService()
 {
     std::cout << __func__ << std::endl;
+    m_mqHandler = new MqHandler;
+    m_deploy = new AvnDeploy;
     init();
 }
 
@@ -67,7 +69,7 @@ void AvnService::loadEmpData()
 
     memcpy(pShMem, pEmpDataTmp, sizeof(EMPLOYEE_DATA_T)*EMPLOYEE_IN_LIST_MODEL_MAX);
 
-    debugShm(pShMem);
+//    debugShm(pShMem);
     std::cout << "Data wrote to shared memory" << std::endl;
     delete[] pEmpDataTmp;
     pEmpDataTmp = nullptr;
@@ -99,37 +101,71 @@ void AvnService::debugShm(EMPLOYEE_DATA_T *aEmpDataTmp)
     }
 }
 
+void AvnService::requestGetScoreData(const int &id, const string &name)
+{
+    printf("%s >> id: %d, name: %s\n", __func__, id, name.c_str());
+
+    // Init Shm
+    // Write to Shm:
+    key_t key = ftok("shmfile",65);
+    // shmget returns an identifier in shmid
+    int shmid = shmget(key,4096,0666|IPC_CREAT);
+    // shmat to attach to shared memory
+    EMPLOYEE_DATA_T *pShMem = (EMPLOYEE_DATA_T*) shmat(shmid,(void*)0,0);
+
+    int asmScore = 0, cppScore = 0, jsScore = 0, qmlScore = 0, openglSccore = 0;
+    E_GET_SCORE_DATA_RESULT eResult = E_GET_SCORE_DATA_RESULLT_FAILED;
+    for (int i = 0; i < EMPLOYEE_IN_LIST_MODEL_MAX; ++i) {
+//        cout << pShMem[i].name << endl;
+        if (strncmp(name.c_str(), pShMem[i].name, EMPLOYEE_NAME_MAXSIZE-1) == 0) {
+            cout << "Matched!!!" << endl;
+            asmScore = pShMem[i].asmScore;
+            cppScore = pShMem[i].cppScore;
+            jsScore = pShMem[i].jsScore;
+            qmlScore = pShMem[i].qmlScore;
+            openglSccore = pShMem[i].openglScore;
+            eResult = E_GET_SCORE_DATA_RESULLT_OK;
+            break;
+        }
+    }
+    // deploy onResponse to client
+    m_deploy->onResponseScoreData(eResult, asmScore, cppScore, jsScore, qmlScore, openglSccore);
+}
+
 void AvnService::runMqReceiveLooper()
 {
-    std::cout << __func__ << std::endl;
+    cout << __func__ << std::endl;
 
     MQ_MSG_DATA_T mqMsgBuffer;
     while (1)
     {
-        if (m_mqHandler.received(mqMsgBuffer) > 0)
+        if (m_mqHandler->received(mqMsgBuffer) > 0)
         {
-            switch (mqMsgBuffer.msg_type) {
-            case E_MQ_MSG_TYPE_SET:
-            {
+            char clientPath[100];
+            sscanf(mqMsgBuffer.msg_text, "%s", clientPath);
+            cout << "clientPath = " << clientPath << endl;
+            cout << "msg_type = " << mqMsgBuffer.msg_type << endl;
+            if (strncmp(clientPath, MQ_CLIENTPATH_AVNAPPA, MQ_MSG_DATA_MAX-1) == 0) {
 
             }
-            break;
-            case E_MQ_MSG_TYPE_GET:
-            {
-                std::cout << "Received message with mqMsgBuffer.msg_type: " << mqMsgBuffer.msg_type << std::endl;
-                std::cout << mqMsgBuffer.msg_text << std::endl;
+            else if (strncmp(clientPath, MQ_CLIENTPATH_AVNAPPC, MQ_MSG_DATA_MAX-1) == 0) {
+                switch (mqMsgBuffer.msg_type) {
+                case E_MQ_MSG_TYPE_REQUESTGETSCOREDATA:
+                {
+                    int id;
+                    char name[100];
+                    sscanf(mqMsgBuffer.msg_text, "%s %d %s", clientPath, &id, name);
+                    requestGetScoreData(id, string(name));
+                }
+                    break;
+                default:
+                    cout << "Unknown mqMsgBuffer.msg_type" << std::endl;
+                    break;
+                }
             }
-            break;
-            case E_MQ_MSG_TYPE_ON:
-            {
-
+            else {
+                cout << "Unknow client requested" << endl;
             }
-            break;
-            default:
-                std::cout << "Unknown mqMsgBuffer.msg_type" << std::endl;
-                break;
-            }
-
             memset(&mqMsgBuffer, 0x0, sizeof(MQ_MSG_DATA_T));
         }
     }

@@ -13,6 +13,7 @@
 #include "common.h"
 #include "common_ipc.h"
 #include "Mq/MqHandler.h"
+#include "AvnDeploy.h"
 
 using namespace std;
 
@@ -24,13 +25,16 @@ public:
 
     void start();
 
+    void requestGetScoreData(const int &id, const string &name);
+
 private:
     void init();
     void loadEmpData();
     void debugShm(EMPLOYEE_DATA_T *aEmpDataTmp);
     void runMqReceiveLooper();
 
-    MqHandler m_mqHandler;
+    MqHandler *m_mqHandler;
+    AvnDeploy *m_deploy;
 };
 
 #endif // AVNSERVICE_H

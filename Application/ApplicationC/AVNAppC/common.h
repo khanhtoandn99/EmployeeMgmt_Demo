@@ -10,6 +10,13 @@
 
 #define MQ_MSG_DATA_MAX 100 //bytes
 
+enum E_GET_SCORE_DATA_RESULT : int
+{
+    E_GET_SCORE_DATA_RESULLT_FAILED = 0,
+    E_GET_SCORE_DATA_RESULLT_OK,
+    E_GET_SCORE_DATA_RESULLT_NAME_NOT_FOUND
+};
+
 typedef struct
 {
     int id;
@@ -26,6 +33,7 @@ typedef struct
 
 typedef struct
 {
+    int id;
     QString name;
     double averageScore;
     bool isSelected;

@@ -2,13 +2,12 @@
 #include <iostream>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <cstring>
 #define MAX 10
 
 enum E_MQ_MSG_TYPE : long
 {
-    E_MQ_MSG_TYPE_SET,
-    E_MQ_MSG_TYPE_GET,
-    E_MQ_MSG_TYPE_ON
+    E_MQ_MSG_TYPE_REQUESTGETSCOREDATA = 1
 };
 
 // structure for message queue
@@ -31,10 +30,11 @@ int main()
     msgid = msgget(key, 0666 | IPC_CREAT);
     printf("New msgid = %d\n", msgid);
 
-    message.mesg_type = E_MQ_MSG_TYPE_GET;
+    message.mesg_type = E_MQ_MSG_TYPE_REQUESTGETSCOREDATA;
   
     printf("Write Data : ");
-    fgets(message.mesg_text,MAX,stdin);
+    // fgets(message.mesg_text,MAX,stdin);
+    memcpy(message.mesg_text, "Application/AVNAppC 1 luan_pham", sizeof("Application/AVNAppC 1 luan_pham"));
   
     // msgsnd to send message
     msgsnd(msgid, &message, sizeof(message), 0);

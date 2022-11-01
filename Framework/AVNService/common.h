@@ -6,6 +6,13 @@
 
 #define EMPLOYEE_DATA_MODEL_FILE_PATH "/home/avn/Desktop/LG_AVN_TEST/Framework/AVNService/empdatamodel.txt"
 
+enum E_GET_SCORE_DATA_RESULT : int
+{
+    E_GET_SCORE_DATA_RESULLT_FAILED = 0,
+    E_GET_SCORE_DATA_RESULLT_OK,
+    E_GET_SCORE_DATA_RESULLT_NAME_NOT_FOUND
+};
+
 typedef struct
 {
     int id;
