@@ -1,18 +1,12 @@
 // C Program for Message Queue (Writer Process)
-#include <iostream>
+#include <stdio.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
 #include <cstring>
 #define MAX 10
 
-enum E_MQ_MSG_TYPE : long
-{
-    E_MQ_MSG_TYPE_REQUESTGETSCOREDATA = 1
-};
-
-// structure for message queue
 struct MQ_MSG_DATA_T {
-    E_MQ_MSG_TYPE mesg_type;
+    long mesg_type;
     char mesg_text[100];
 };
   
@@ -22,25 +16,24 @@ int main()
     int msgid;
     MQ_MSG_DATA_T message;
   
-    // ftok to generate unique key
-    key = ftok("/home/avn/Desktop/progfile", 65);
-  
-    // msgget creates a message queue
-    // and returns identifier
+    // // ftok to generate unique key
+    key = ftok("/home/avn/Desktop/LG_AVN_TEST/Framework/AVNService/progfile_service", 75);
     msgid = msgget(key, 0666 | IPC_CREAT);
     printf("New msgid = %d\n", msgid);
 
-    message.mesg_type = E_MQ_MSG_TYPE_REQUESTGETSCOREDATA;
-  
-    printf("Write Data : ");
-    // fgets(message.mesg_text,MAX,stdin);
-    memcpy(message.mesg_text, "Application/AVNAppC 1 luan_pham", sizeof("Application/AVNAppC 1 luan_pham"));
+    // message.mesg_type = E_MQ_MSG_TYPE_REQUESTGETSCOREDATA;
+    message.mesg_type = 4;
+    memcpy(message.mesg_text, "Framework/AVNService 1 2 3 4 5 2", sizeof("Framework/AVNService 1 2 3 4 5"));
   
     // msgsnd to send message
-    msgsnd(msgid, &message, sizeof(message), 0);
-  
-    // display the message
+    int result = msgsnd(msgid, &message, sizeof(message.mesg_text), 0);
+
+    if (result == -1) printf("Failed\n");
+
+
+     // display the message
     printf("Data send is : %s \n", message.mesg_text);
-  
+    // msgctl(msgid, IPC_RMID, NULL);
+
     return 0;
 }

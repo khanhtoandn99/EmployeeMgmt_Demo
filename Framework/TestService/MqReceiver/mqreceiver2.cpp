@@ -23,18 +23,18 @@ int main()
     MQ_MSG_DATA_T message;
   
     // ftok to generate unique key
-    key = ftok("/home/avn/Desktop/progfile", 65);
+    key = ftok("/home/avn/Desktop/progfile2", 70);
     msgid = msgget(key, 0666 | IPC_CREAT);
     printf("New msgid = %d\n", msgid);
     
     while (1)
     {
         // msgrcv to receive message
-        ssize_t ssize = msgrcv(msgid, &message, sizeof(message), 2, 0);
+        ssize_t ssize = msgrcv(msgid, &message, sizeof(message), 1, 0);
 
         if (ssize > 0) {
             // display the message
-            printf("1.Data Received is : %s \n", message.mesg_text);
+            printf("2.Data Received is : %s \n", message.mesg_text);
 
             memset(&message, 0x0, sizeof(MQ_MSG_DATA_T));
             memcpy(message.mesg_text, "Pong!", sizeof("Pong!"));

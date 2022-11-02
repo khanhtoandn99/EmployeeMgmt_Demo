@@ -10,6 +10,7 @@
 #include "employeedataproxymodel.h"
 #include "AppHMIService.h"
 
+
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -22,14 +23,12 @@ int main(int argc, char *argv[])
     qmlRegisterType<EmployeeDataProxyModel>("EmpDataProxyModel",1,0,"EmployeeDataProxyModel");
     qmlRegisterType<AppHMIService>("AppHMIService", 1, 0, "AppHMIService");
 
-//    connect(m_pPopupService, SIGNAL(signalSystemUIThemeUpdate(const E_UI_THEME)),
-//            m_pPopupHMI, SLOT(slotSystemUIThemeUpdate(const E_UI_THEME)));
+    AppHMIService appService;
+    appService.start();
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
 
-//    AppHMIService m_app;
-//    engine.rootContext()->setContextProperty("AppHMIService", m_app);
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)

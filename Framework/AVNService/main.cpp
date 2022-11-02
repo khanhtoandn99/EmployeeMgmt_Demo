@@ -1,11 +1,13 @@
 #include <iostream>
-#include <sstream>
 #include "Service/AvnService.h"
 using namespace std;
 
 int main()
 {
     AvnService service;
-    service.start();
+//    service.start();
+
+    thread mqthread(service.runMqReceiveLooper());
+    mqthread.join();
     return 0;
 }

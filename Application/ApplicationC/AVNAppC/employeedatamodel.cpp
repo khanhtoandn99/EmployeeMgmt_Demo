@@ -74,7 +74,7 @@ QHash<int, QByteArray> EmployeeDataModel::roleNames() const
 
 void EmployeeDataModel::init()
 {
-    qDebug("EmployeeDataModel::init()");
+    qDebug("[%s] %s", __FILE__, __func__);
 
     beginResetModel();
     vEmployeeList.clear();
@@ -85,7 +85,7 @@ void EmployeeDataModel::init()
 
     EMPLOYEE_LIST_ITEM_T empListItemTmp;
     if (empDataPtr == nullptr) {
-        qDebug() << "empDataPtr is nullptr";
+        qDebug("[%s] %s << empDataPtr is nullptr", __FILE__, __func__);
         return;
     }
     EMPLOYEE_DATA_T aEmpDataTmp[10];
@@ -97,13 +97,13 @@ void EmployeeDataModel::init()
         empListItemTmp.name = QString::fromUtf8(aEmpDataTmp[i].name);
         empListItemTmp.averageScore = aEmpDataTmp[i].average;
         empListItemTmp.isSelected = aEmpDataTmp[i].isSelected;
-        qDebug("empListItemTmp.id = %d", empListItemTmp.id);
-        qDebug() << "empListItemTmp.name = " << empListItemTmp.name;
-        qDebug("empListItemTmp.averageScore = %.2f", empListItemTmp.averageScore);
-        qDebug("empListItemTmp.isSelected = %d", empListItemTmp.isSelected);
+//        qDebug("empListItemTmp.id = %d", empListItemTmp.id);
+//        qDebug() << "empListItemTmp.name = " << empListItemTmp.name;
+//        qDebug("empListItemTmp.averageScore = %.2f", empListItemTmp.averageScore);
+//        qDebug("empListItemTmp.isSelected = %d", empListItemTmp.isSelected);
         vEmployeeList.push_back(empListItemTmp);
     }
-    qDebug("Init data from Shm completed");
+    qDebug("[%s] %s << Init data from Shm completed", __FILE__, __func__);
     endResetModel();
 
     //detach from shared memory
@@ -174,7 +174,7 @@ QHash<int, QByteArray> EmployeeDataDetailModel::roleNames() const
 
 void EmployeeDataDetailModel::init()
 {
-    qDebug("EmployeeDataDetailModel::init()");
+    qDebug("[%s] %s", __FILE__, __func__);
 
     key_t key = ftok("shmfile",65);
     int shmid = shmget(key,4096,0666|IPC_CREAT);
@@ -195,6 +195,14 @@ void EmployeeDataDetailModel::init()
 
 void EmployeeDataDetailModel::updateDetailData(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore)
 {
+    qDebug("[%s] %s >> asmScore: %d, cppScore: %d, jsScore: %d, qmlScore: %d, openglScore: %d"
+           ,__FILE__
+           ,__func__
+           ,asmScore
+           ,cppScore
+           ,jsScore
+           ,qmlScore
+           ,openglScore);
     // Send IPC to Service
     // onResponse from Service
 
@@ -211,6 +219,14 @@ void EmployeeDataDetailModel::updateDetailData(const int &asmScore, const int &c
 
 void EmployeeDataDetailModel::slotUpdateScoreModel(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore)
 {
+    qDebug("[%s] %s >> asmScore: %d, cppScore: %d, jsScore: %d, qmlScore: %d, openglScore: %d"
+           ,__FILE__
+           ,__func__
+           ,asmScore
+           ,cppScore
+           ,jsScore
+           ,qmlScore
+           ,openglScore);
     beginResetModel();
     vEmployeeScore.clear();
     vEmployeeScore.push_back(asmScore); // Asm score

@@ -1,67 +1,53 @@
 #include "AppHMIService.h"
 
 AppHMIService::AppHMIService(QObject *parent)
-    : QObject{parent}
+    : QThread{parent}
 {
-    m_mqHandler = new MqHandler();
-//    run();
+    qDebug("[%s] %s", __FILE__, __func__);
+    m_mqHandler = MqHandler::getInstance(MQ_FTOK_KEY_APPC_FILEPATH, MQ_FTOK_KEY_APPC_ID);
 }
 
 void AppHMIService::run()
 {
-    pthread_t ptid;
-    pthread_create(&ptid, NULL, (void*)runMqReceiveLooper, NULL);
-    pthread_join(ptid, NULL);
-//    runMqReceiveLooper();
+    qDebug("[%s] %s", __FILE__, __func__);
+    runMqReceiveLooper();
 }
 
 void AppHMIService::runMqReceiveLooper()
 {
-    qDebug() << __func__;
+    qDebug("[%s] %s", __FILE__, __func__);
 
     MQ_MSG_DATA_T mqMsgBuffer;
+    memset(mqMsgBuffer.msg_text, 0x0, sizeof(mqMsgBuffer.msg_text));
+    mqMsgBuffer.msg_type = E_MQ_MSG_TYPE_FOR_APP_C;
+    qDebug("[%s] %s with msgId = %d", __FILE__, __func__, m_mqHandler->getMsgId());
     while (1)
     {
         if (m_mqHandler->received(mqMsgBuffer) > 0)
         {
             char clientPath[100];
             sscanf(mqMsgBuffer.msg_text, "%s", clientPath);
-            qDebug() << "clientPath = " << clientPath;
-            qDebug() << "msg_type = " << mqMsgBuffer.msg_type;
-            if (strncmp(clientPath, MQ_CLIENTPATH_AVNSERVICE, MQ_MSG_DATA_MAX-1) == 0) {
-                switch (mqMsgBuffer.msg_type) {
-                case E_MQ_MSG_TYPE_ONRESPONSESCOREDATA:
-                {
-                    E_GET_SCORE_DATA_RESULT eResult;
-                    int asmScore, cppScore, jsScore, qmlScore, openglScore;
-                    sscanf(mqMsgBuffer.msg_text, "%s %d %d %d %d %d %d"
-                           ,clientPath
-                           ,&eResult
-                           ,&asmScore
-                           ,&cppScore
-                           ,&jsScore
-                           ,&qmlScore
-                           ,&openglScore);
-                    onResponseScoreData(eResult, asmScore, cppScore, jsScore, qmlScore, openglScore);
-                }
-                    break;
-                default:
-                    qDebug() << "Unknown mqMsgBuffer.msg_type";
-                    break;
-                }
-            }
-            else {
-                qDebug() << "Unknow client requested";
-            }
+            qDebug("[%s] %s << clientPath: %s", __FILE__, __func__, clientPath);
+            qDebug("[%s] %s << msg_type: %d", __FILE__, __func__, (int)mqMsgBuffer.msg_type);
+            E_GET_SCORE_DATA_RESULT eResult;
+            int asmScore, cppScore, jsScore, qmlScore, openglScore;
+            sscanf(mqMsgBuffer.msg_text, "%s %d %d %d %d %d %d"
+                    ,clientPath
+                    ,&eResult
+                    ,&asmScore
+                    ,&cppScore
+                    ,&jsScore
+                    ,&qmlScore
+                    ,&openglScore);
+            onResponseScoreData(eResult, asmScore, cppScore, jsScore, qmlScore, openglScore);
             memset(&mqMsgBuffer, 0x0, sizeof(MQ_MSG_DATA_T));
         }
     }
-    pthread_exit(NULL);
 }
 
 void AppHMIService::requestGetScoreData(const int &id, const QString &name)
 {
-    qDebug() << __func__ << ">> name: " << name;
+    qDebug("[%s] %s >> id: %d, name: %s", __FILE__, __func__, id, name.toStdString().c_str());
     QString msg_text = MQ_CLIENTPATH_AVNAPPC;
     msg_text += " ";
     msg_text += QString::number(id);
@@ -70,13 +56,16 @@ void AppHMIService::requestGetScoreData(const int &id, const QString &name)
 
     MQ_MSG_DATA_T mqrequestGetScoreDataMsg;
     memcpy(mqrequestGetScoreDataMsg.msg_text, msg_text.toStdString().c_str(), sizeof(char)*MQ_MSG_DATA_MAX);
-    mqrequestGetScoreDataMsg.msg_type = E_MQ_MSG_TYPE_REQUESTGETSCOREDATA;
-    m_mqHandler->send(mqrequestGetScoreDataMsg);
+    mqrequestGetScoreDataMsg.msg_type = (long)E_MQ_MSG_TYPE_FOR_SERVICE;
+    key_t keyTmp = ftok(MQ_FTOK_KEY_SERVICE_FILEPATH, MQ_FTOK_KEY_SERVICE_ID);
+    m_mqHandler->send(msgget(keyTmp, 0666 | IPC_CREAT), mqrequestGetScoreDataMsg);
 }
 
 void AppHMIService::onResponseScoreData(const E_GET_SCORE_DATA_RESULT &eResult, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore)
 {
-    qDebug("AppHMIService::%s >> eResult: %d, asmScore: %d, cppScore: %d, jsScore: %d, qmlScore: %d, openglScore: %d"
+    qDebug("[%s] %s >> eResult: %d, asmScore: %d, cppScore: %d, jsScore: %d, qmlScore: %d, openglScore: %d"
+           ,__FILE__
+           ,__func__
            ,eResult
            ,asmScore
            ,cppScore
@@ -85,6 +74,13 @@ void AppHMIService::onResponseScoreData(const E_GET_SCORE_DATA_RESULT &eResult, 
            ,openglScore);
     if (eResult != E_GET_SCORE_DATA_RESULLT_OK) return;
 
+    qDebug("[%s] %s << emit signalUpdateScoreModel", __FILE__, __func__);
     emit signalUpdateScoreModel(asmScore, cppScore, jsScore, qmlScore, openglScore);
 
+}
+
+void *AppHMIService::runMsgReceiveLooper(void *arg)
+{
+    qDebug("[%s] %s", __FILE__, __func__);
+    return nullptr;
 }

@@ -1,34 +1,38 @@
 #include "AvnService.h"
+#include <iostream>
 
 AvnService::AvnService()
 {
-    std::cout << __func__ << std::endl;
-    m_mqHandler = new MqHandler;
-    m_deploy = new AvnDeploy;
+    cout << "[AvnService] %s\n" << __func__ << endl;
+    m_mqHandler = MqHandler::getInstance(MQ_FTOK_KEY_SERVICE_FILEPATH, MQ_FTOK_KEY_SERVICE_ID);
+    m_deploy = AvnDeploy::getInstance();
+//    m_mqHandler = new MqHandler(MQ_FTOK_KEY_SERVICE_FILEPATH, MQ_FTOK_KEY_SERVICE_ID);
+//    m_deploy = new AvnDeploy;
+    if (m_mqHandler == nullptr) {cout << "[AvnService] %s << m_mqHandler is nullptr\n" << __func__ << endl;}
+    if (m_deploy == nullptr) {cout << "[AvnService] %s << m_deploy is nullptr\n" << __func__ << endl;}
     init();
 }
 
 AvnService::~AvnService()
 {
-    std::cout << __func__ << std::endl;
+    cout << "[AvnService] " << __func__ << endl;
 }
+
 void AvnService::init()
 {
-    std::cout << __func__ << std::endl;
+    cout << "[AvnService] " << __func__ << endl;
     loadEmpData();
 }
 
 void AvnService::start()
 {
-    std::cout << __func__ << std::endl;
-
-    runMqReceiveLooper();
+    cout << "[AvnService] " << __func__ << endl;
 }
 
 
 void AvnService::loadEmpData()
 {
-    std::cout << __func__ << std::endl;
+    cout << "[AvnService] " << __func__ << endl;
 
     // Init Shm
     // Write to Shm:
@@ -64,32 +68,31 @@ void AvnService::loadEmpData()
         rfData.close();
     }
     else {
-        std::cout << "File: " << EMPLOYEE_DATA_MODEL_FILE_PATH << " open failed!" << std::endl;
+        cout << "[AvnService] " << __func__ << "File: " << EMPLOYEE_DATA_MODEL_FILE_PATH << " open failed!" << endl;
     }
 
     memcpy(pShMem, pEmpDataTmp, sizeof(EMPLOYEE_DATA_T)*EMPLOYEE_IN_LIST_MODEL_MAX);
 
 //    debugShm(pShMem);
-    std::cout << "Data wrote to shared memory" << std::endl;
+    cout << "[AvnService] "<< __func__ << "Data wrote to Shared Memory" << endl;
     delete[] pEmpDataTmp;
     pEmpDataTmp = nullptr;
 
 
     //detach from shared memory
     shmdt(pEmpDataTmp);
-
-//    while(1){}
-
-    std::cout << __func__ << " end" << std::endl;
 }
 
 void AvnService::debugShm(EMPLOYEE_DATA_T *aEmpDataTmp)
 {
-    std::cout << __func__ << "" << std::endl;
-    if (aEmpDataTmp == nullptr) {std::cout << "nullptr"; return;}
+    cout << "[AvnService] " << __func__ << endl;
+    if (aEmpDataTmp == nullptr) {
+        cout << "[AvnService] " << __func__ << "nullptr" << endl;
+        return;
+    }
 
     for (int i = 0; i < EMPLOYEE_IN_LIST_MODEL_MAX; ++i) {
-        std::cout  << aEmpDataTmp[i].id << " "
+        cout  << aEmpDataTmp[i].id << " "
                 << aEmpDataTmp[i].name << " "
                 << aEmpDataTmp[i].asmScore << " "
                 << aEmpDataTmp[i].cppScore << " "
@@ -97,13 +100,13 @@ void AvnService::debugShm(EMPLOYEE_DATA_T *aEmpDataTmp)
                 << aEmpDataTmp[i].qmlScore << " "
                 << aEmpDataTmp[i].openglScore << " "
                 << aEmpDataTmp[i].average << " "
-                << aEmpDataTmp[i].isSelected << std::endl;
+                << aEmpDataTmp[i].isSelected << endl;
     }
 }
 
 void AvnService::requestGetScoreData(const int &id, const string &name)
 {
-    printf("%s >> id: %d, name: %s\n", __func__, id, name.c_str());
+    cout << "[AvnService] "<<__func__ << "id: "<<id << " name: "<<name << endl;
 
     // Init Shm
     // Write to Shm:
@@ -118,7 +121,7 @@ void AvnService::requestGetScoreData(const int &id, const string &name)
     for (int i = 0; i < EMPLOYEE_IN_LIST_MODEL_MAX; ++i) {
 //        cout << pShMem[i].name << endl;
         if (strncmp(name.c_str(), pShMem[i].name, EMPLOYEE_NAME_MAXSIZE-1) == 0) {
-            cout << "Matched!!!" << endl;
+            cout << "[AvnService] " << __func__ << " Matched!" << endl;
             asmScore = pShMem[i].asmScore;
             cppScore = pShMem[i].cppScore;
             jsScore = pShMem[i].jsScore;
@@ -132,40 +135,26 @@ void AvnService::requestGetScoreData(const int &id, const string &name)
     m_deploy->onResponseScoreData(eResult, asmScore, cppScore, jsScore, qmlScore, openglSccore);
 }
 
-void AvnService::runMqReceiveLooper()
+thread AvnService::runMqReceiveLooper()
 {
-    cout << __func__ << std::endl;
+    cout << "[AvnService] " << __func__ << endl;
 
     MQ_MSG_DATA_T mqMsgBuffer;
+    memset(mqMsgBuffer.msg_text, 0x0, sizeof(mqMsgBuffer.msg_text));
+    mqMsgBuffer.msg_type = E_MQ_MSG_TYPE_FOR_SERVICE;
+    cout << "[AvnService] " << __func__ << " with msgId = " << m_mqHandler->getMsgId() << endl;
     while (1)
     {
         if (m_mqHandler->received(mqMsgBuffer) > 0)
         {
             char clientPath[100];
             sscanf(mqMsgBuffer.msg_text, "%s", clientPath);
-            cout << "clientPath = " << clientPath << endl;
-            cout << "msg_type = " << mqMsgBuffer.msg_type << endl;
-            if (strncmp(clientPath, MQ_CLIENTPATH_AVNAPPA, MQ_MSG_DATA_MAX-1) == 0) {
-
-            }
-            else if (strncmp(clientPath, MQ_CLIENTPATH_AVNAPPC, MQ_MSG_DATA_MAX-1) == 0) {
-                switch (mqMsgBuffer.msg_type) {
-                case E_MQ_MSG_TYPE_REQUESTGETSCOREDATA:
-                {
-                    int id;
-                    char name[100];
-                    sscanf(mqMsgBuffer.msg_text, "%s %d %s", clientPath, &id, name);
-                    requestGetScoreData(id, string(name));
-                }
-                    break;
-                default:
-                    cout << "Unknown mqMsgBuffer.msg_type" << std::endl;
-                    break;
-                }
-            }
-            else {
-                cout << "Unknow client requested" << endl;
-            }
+            cout << "[AvnService] "<<__func__ << "clientPath "<<clientPath << endl;
+            cout << "[AvnService] "<<__func__ << "mqMsgBuffer.msg_type "<<mqMsgBuffer.msg_type << endl;
+            int id;
+            char name[100];
+            sscanf(mqMsgBuffer.msg_text, "%s %d %s", clientPath, &id, name);
+            requestGetScoreData(id, string(name));
             memset(&mqMsgBuffer, 0x0, sizeof(MQ_MSG_DATA_T));
         }
     }
