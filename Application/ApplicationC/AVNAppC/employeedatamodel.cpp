@@ -193,27 +193,37 @@ void EmployeeDataDetailModel::init()
     shmdt(empDataPtr);
 }
 
-void EmployeeDataDetailModel::updateDetailData(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore)
+void EmployeeDataDetailModel::updateDetailData(const int &id, const QString &name)
 {
-    qDebug("[%s] %s >> asmScore: %d, cppScore: %d, jsScore: %d, qmlScore: %d, openglScore: %d"
+    qDebug("[%s] %s >> id: %d, name: %s"
            ,__FILE__
            ,__func__
-           ,asmScore
-           ,cppScore
-           ,jsScore
-           ,qmlScore
-           ,openglScore);
+           ,id
+           ,name.toStdString().c_str());
     // Send IPC to Service
     // onResponse from Service
 
     // Emit signal to EmployeeDataDetailModel
     beginResetModel();
     vEmployeeScore.clear();
-    vEmployeeScore.push_back(asmScore); // Asm score
-    vEmployeeScore.push_back(cppScore); // Cpp score
-    vEmployeeScore.push_back(jsScore); // Js score
-    vEmployeeScore.push_back(qmlScore); // Qml score
-    vEmployeeScore.push_back(openglScore); // OpenGl score
+    key_t key = ftok("shmfile",65);
+    // shmget returns an identifier in shmid
+    int shmid = shmget(key,4096,0666|IPC_CREAT);
+    // shmat to attach to shared memory
+    EMPLOYEE_DATA_T *pShMem = (EMPLOYEE_DATA_T*) shmat(shmid,(void*)0,0);
+
+    for (int i = 0; i < EMPLOYEE_IN_LIST_MODEL_MAX; ++i) {
+//        cout << pShMem[i].name << endl;
+        if (strncmp(name.toStdString().c_str(), pShMem[i].name, EMPLOYEE_NAME_MAXSIZE-1) == 0) {
+            qDebug() << "[AvnService] " << __func__ << " Matched!" << endl;
+            vEmployeeScore.push_back(pShMem[i].asmScore);
+            vEmployeeScore.push_back(pShMem[i].cppScore);
+            vEmployeeScore.push_back(pShMem[i].jsScore);
+            vEmployeeScore.push_back(pShMem[i].qmlScore);
+            vEmployeeScore.push_back(pShMem[i].openglScore);
+            break;
+        }
+    }
     endResetModel();
 }
 

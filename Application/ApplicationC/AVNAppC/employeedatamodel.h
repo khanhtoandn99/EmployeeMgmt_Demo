@@ -78,7 +78,7 @@ public:
 
     void init();
 
-    Q_INVOKABLE void updateDetailData(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
+    Q_INVOKABLE void updateDetailData(const int &id, const QString &name);
 
 private:
     QVector<int> vEmployeeScore;

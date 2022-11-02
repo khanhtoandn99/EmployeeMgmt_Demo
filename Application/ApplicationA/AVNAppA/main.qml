@@ -4,6 +4,7 @@ import QtQuick.Controls 2.15
 import EmpDataModel 1.0
 import EmpDataDetailModel 1.0
 import EmpDataProxyModel 1.0
+import AppHMIService 1.0
 
 Window {
     visible: true
@@ -30,6 +31,14 @@ Window {
 
     EmployeeDataDetailModel {
         id: id_EmployeeDataDetailModel
+    }
+
+    AppHMIService {
+        id: id_AppHMIService
+        onSignalUpdateScoreModel: {
+            console.log("onSignalUpdateScoreModel")
+            id_EmployeeDataDetailModel.updateDetailData(asmScore, cppScore, jsScore, qmlScore, openglScore)
+        }
     }
 
     Text {
@@ -243,7 +252,8 @@ Window {
                 anchors.fill: parent
                 onClicked: {
                     currentEmpName = employeeName
-                    getDetailData(currentEmpName)
+                    id_AppHMIService.requestGetScoreData(index, currentEmpName)
+                    id_EmployeeDataDetailModel.updateDetailData(index, currentEmpName)
                 }
             }
         }

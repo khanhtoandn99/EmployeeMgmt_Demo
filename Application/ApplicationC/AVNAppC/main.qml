@@ -252,6 +252,7 @@ Window {
                 onClicked: {
                     currentEmpName = employeeName
                     id_AppHMIService.requestGetScoreData(index, currentEmpName)
+                    id_EmployeeDataDetailModel.updateDetailData(index, currentEmpName)
                 }
             }
         }

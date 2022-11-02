@@ -4,7 +4,7 @@ AppHMIService::AppHMIService(QObject *parent)
     : QThread{parent}
 {
     qDebug("[%s] %s", __FILE__, __func__);
-    m_mqHandler = MqHandler::getInstance(MQ_FTOK_KEY_APPC_FILEPATH, MQ_FTOK_KEY_APPC_ID);
+    m_mqHandler = MqHandler::getInstance(MQ_FTOK_KEY_APPA_FILEPATH, MQ_FTOK_KEY_APPA_ID);
 }
 
 void AppHMIService::run()
@@ -19,7 +19,7 @@ void AppHMIService::runMqReceiveLooper()
 
     MQ_MSG_DATA_T mqMsgBuffer;
     memset(mqMsgBuffer.msg_text, 0x0, sizeof(mqMsgBuffer.msg_text));
-    mqMsgBuffer.msg_type = E_MQ_MSG_TYPE_FOR_APP_C;
+    mqMsgBuffer.msg_type = E_MQ_MSG_TYPE_FOR_APP_A;
     qDebug("[%s] %s with msgId = %d", __FILE__, __func__, m_mqHandler->getMsgId());
     while (1)
     {

@@ -23,10 +23,10 @@ int main()
 
     // message.mesg_type = E_MQ_MSG_TYPE_REQUESTGETSCOREDATA;
     message.mesg_type = 4;
-    memcpy(message.mesg_text, "Framework/AVNService 1 2 3 4 5 2", sizeof("Framework/AVNService 1 2 3 4 5"));
+    memcpy(message.mesg_text, "Framework/AVNService", sizeof("Framework/AVNService"));
   
     // msgsnd to send message
-    int result = msgsnd(msgid, &message, sizeof(message.mesg_text), 0);
+    int result = msgsnd(13, &message, sizeof(message.mesg_text), 0);
 
     if (result == -1) printf("Failed\n");
 

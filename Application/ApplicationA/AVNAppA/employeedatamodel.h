@@ -2,7 +2,13 @@
 #define EMPLOYEEDATAMODEL_H
 
 #include <QAbstractListModel>
+#include <qdebug.h>
 #include "common.h"
+#include <cstring>
+
+// IPC
+#include <sys/ipc.h>
+#include <sys/shm.h>
 
 class EmployeeDataModel : public QAbstractListModel
 {
@@ -28,7 +34,8 @@ public:
 
     // toan4.nguyen:
     enum EMPLOYEE_DATA_ROLES {
-        EMPLOYEE_DATA_ROLES_NAME = Qt::UserRole + 1,
+        EMPLOYEE_DATA_ROLES_ID = Qt::UserRole + 1,
+        EMPLOYEE_DATA_ROLES_NAME,
         EMPLOYEE_DATA_ROLES_AVERAGE_SCORE,
         EMPLOYEE_DATA_ROLES_IS_SELECTED
     };
@@ -44,6 +51,10 @@ private:
 class EmployeeDataDetailModel : public QAbstractListModel
 {
 Q_OBJECT
+
+public slots:
+    void slotUpdateScoreModel(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
+
 public:
     explicit EmployeeDataDetailModel(QObject *parent = nullptr);
 
@@ -67,21 +78,7 @@ public:
 
     void init();
 
-    Q_INVOKABLE void updateDetailData(const QString &name)
-    {
-        // Send IPC to Service
-        // onResponse from Service
-
-        // Emit signal to EmployeeDataDetailModel
-        beginResetModel();
-        vEmployeeScore.clear();
-        vEmployeeScore.push_back(rand()%5); // Asm score
-        vEmployeeScore.push_back(rand()%5); // Cpp score
-        vEmployeeScore.push_back(rand()%5); // Js score
-        vEmployeeScore.push_back(rand()%5); // Qml score
-        vEmployeeScore.push_back(rand()%5); // OpenGl score
-        endResetModel();
-    }
+    Q_INVOKABLE void updateDetailData(const int &id, const QString &name);
 
 private:
     QVector<int> vEmployeeScore;
