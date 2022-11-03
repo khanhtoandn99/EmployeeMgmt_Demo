@@ -41,6 +41,11 @@ void AppHMIService::runMqReceiveLooper()
                     onResponseScoreDataToA(eResult, asmScore, cppScore, jsScore, qmlScore, openglScore);
                 }
                     break;
+                case E_MQ_MSG_SERVICE_FUNC_ID_onNotifyDataChanged:
+                {
+                    onNotifyDataChanged();
+                }
+                    break;
                 default:
                     break;
                 }
@@ -87,4 +92,9 @@ void AppHMIService::onResponseScoreDataToA(const E_GET_SCORE_DATA_RESULT &eResul
     qDebug("[%s] %s << emit signalUpdateScoreModel", __FILE__, __func__);
     emit signalUpdateScoreModel(asmScore, cppScore, jsScore, qmlScore, openglScore);
 
+}
+
+void AppHMIService::onNotifyDataChanged()
+{
+    qDebug("[%s] %s", __FILE__, __func__);
 }

@@ -40,6 +40,12 @@ void AppHMIService::runMqReceiveLooper()
                     sscanf(mqMsgBuffer.msg_text, "%d %d %d %d %d %d %d %d", &eClientID, &funcId, &eResult, &asmScore, &cppScore, &jsScore, &qmlScore, &openglScore);
                     onResponseScoreDataToC(eResult, asmScore, cppScore, jsScore, qmlScore, openglScore);
                 }
+                case E_MQ_MSG_SERVICE_FUNC_ID_onResponseUpdateData:
+                {
+                    E_UPDATE_DATA_RESULT eResult;
+                    sscanf(mqMsgBuffer.msg_text, "%d %d %d", &eClientID, &funcId, &eResult);
+                    onResponseUpdateData(eResult);
+                }
                     break;
                 default:
                     break;
@@ -101,6 +107,23 @@ void AppHMIService::requestUpdateData(const QString &name, const int &asmScore, 
     m_mqHandler->send(msgget(keyTmp, 0666 | IPC_CREAT), mqrequestGetScoreDataMsg);
 }
 
+void AppHMIService::requestSaveDataOnExit()
+{
+    qDebug("[%s] %s", __FILE__, __func__);
+    MQ_MSG_DATA_T mqMsg;
+    // Change input text data here:
+    QString msg_text = "";
+    msg_text += QString::number(E_MQ_MSG_APPLICATION_C_ID);
+    msg_text += " ";
+    msg_text += QString::number(E_MQ_MSG_SERVICE_FUNC_ID_requestSaveDataOnExit);
+    // End input text data here:
+
+    memcpy(mqMsg.msg_text, msg_text.toStdString().c_str(), sizeof(char)*MQ_MSG_DATA_MAX);
+    mqMsg.msg_type = (long)E_MQ_MSG_TYPE_FOR_SERVICE;
+    key_t keyTmp = ftok(MQ_FTOK_KEY_SERVICE_FILEPATH, MQ_FTOK_KEY_SERVICE_ID);
+    m_mqHandler->send(msgget(keyTmp, 0666 | IPC_CREAT), mqMsg);
+}
+
 
 
 void AppHMIService::onResponseScoreDataToC(const E_GET_SCORE_DATA_RESULT &eResult, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore)
@@ -118,5 +141,10 @@ void AppHMIService::onResponseScoreDataToC(const E_GET_SCORE_DATA_RESULT &eResul
 
     qDebug("[%s] %s << emit signalUpdateScoreModel", __FILE__, __func__);
     emit signalUpdateScoreModel(asmScore, cppScore, jsScore, qmlScore, openglScore);
+}
 
+void AppHMIService::onResponseUpdateData(const E_UPDATE_DATA_RESULT &eResult)
+{
+    qDebug("[%s] %s >> eResult: %d", __FILE__, __func__, eResult);
+    // Request Model to reset to show the employee list with score average changed
 }

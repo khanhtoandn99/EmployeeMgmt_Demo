@@ -68,6 +68,7 @@ enum E_MQ_MSG_SERVICE_FUNC_ID
     E_MQ_MSG_SERVICE_FUNC_ID_onResponseScoreDataToA,
     E_MQ_MSG_SERVICE_FUNC_ID_onResponseScoreDataToC,
     E_MQ_MSG_SERVICE_FUNC_ID_onResponseUpdateData,
+    E_MQ_MSG_SERVICE_FUNC_ID_requestSaveDataOnExit,
 
     // TO proxySync
     E_MQ_MSG_SERVICE_FUNC_ID_onNotifyDataChanged,

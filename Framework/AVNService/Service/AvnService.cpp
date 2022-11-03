@@ -163,6 +163,7 @@ void AvnService::requestUpdateData(const string &name, const int &asmScore, cons
             pShMem[i].jsScore = jsScore;
             pShMem[i].qmlScore = qmlScore;
             pShMem[i].openglScore = openglScore;
+            pShMem[i].average = (asmScore+cppScore+jsScore+qmlScore+openglScore)/5;
             eResult = E_UPDATE_DATA_RESULLT_OK;
             break;
         }
@@ -172,6 +173,43 @@ void AvnService::requestUpdateData(const string &name, const int &asmScore, cons
     // notify to all client relate
     m_deploy->onNotifyDataChanged();
 }
+
+void AvnService::requestSaveDataOnExit()
+{
+    cout << "[AvnService] "<<__func__ << endl;
+
+    key_t key = ftok("shmfile",65);
+    // shmget returns an identifier in shmid
+    int shmid = shmget(key,4096,0666|IPC_CREAT);
+    // shmat to attach to shared memory
+    EMPLOYEE_DATA_T *pShMem = (EMPLOYEE_DATA_T*) shmat(shmid,(void*)0,0);
+
+    std::ofstream wfData;
+    wfData.open(EMPLOYEE_DATA_MODEL_FILE_PATH, std::ifstream::out);
+    if (wfData.is_open()) {
+        int i = 0;
+        while (i < 10)
+        {
+            wfData << pShMem[i].id << " "
+                    << pShMem[i].name << " "
+                    << pShMem[i].asmScore << " "
+                    << pShMem[i].cppScore << " "
+                    << pShMem[i].jsScore << " "
+                    << pShMem[i].qmlScore << " "
+                    << pShMem[i].openglScore << " "
+                    << pShMem[i].average << " "
+                    << pShMem[i].isSelected << endl;
+            ++i;
+        }
+        wfData.close();
+    }
+    //detach from shared memory
+    shmdt(pShMem);
+
+    // destroy the shared memory
+    shmctl(shmid,IPC_RMID,NULL);
+}
+
 
 void AvnService::requestGetScoreDataFromA(const int &id, const string &name)
 {
@@ -252,6 +290,11 @@ thread AvnService::runMqReceiveLooper()
                     int asmScore, cppScore, jsScore, qmlScore, openglScore;
                     sscanf(mqMsgBuffer.msg_text, "%d %d %s %d %d %d %d %d", &eClientID, &funcId, empName, &asmScore, &cppScore, &jsScore, &qmlScore, &openglScore);
                     requestUpdateData(string(empName), asmScore, cppScore, jsScore, qmlScore, openglScore);
+                }
+                    break;
+                case E_MQ_MSG_SERVICE_FUNC_ID_requestSaveDataOnExit:
+                {
+                    requestSaveDataOnExit();
                 }
                     break;
                 default:

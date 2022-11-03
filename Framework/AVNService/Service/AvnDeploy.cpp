@@ -102,7 +102,7 @@ void AvnDeploy::onNotifyDataChanged()
     string msg_text = "";
     msg_text += std::to_string(E_MQ_MSG_SERVICE_B_ID);
     msg_text += " ";
-    msg_text += std::to_string(E_MQ_MSG_SERVICE_FUNC_ID_onResponseUpdateData);
+    msg_text += std::to_string(E_MQ_MSG_SERVICE_FUNC_ID_onNotifyDataChanged);
 
     MQ_MSG_DATA_T mqMsg;
     memcpy(mqMsg.msg_text, msg_text.c_str(), sizeof(char)*MQ_MSG_DATA_MAX);

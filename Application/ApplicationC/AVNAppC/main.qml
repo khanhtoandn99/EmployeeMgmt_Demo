@@ -22,6 +22,8 @@ Window {
     property int currentEmpQmlScore: 0
     property int currentEmpOpenglScore: 0
 
+    property var aScore: [1,2,1,2,1]
+
     signal getDetailData(string name)
 
 
@@ -107,6 +109,12 @@ Window {
             heightSize: height
             textSize: 36
             textCurrentScore: skillScore.toString()
+            onScoreTextChanged: {
+                if (textCurrentScore !== "") {
+                    aScore[index] = parseInt(textCurrentScore)
+//                    console.log("id_skillScoreInputList.onScoreTextChanged() to " + aScore[0].toString() + " " + aScore[1].toString() + " " + aScore[2].toString() + " " + aScore[3].toString() + " " + aScore[4].toString())
+                }
+            }
         }
     }
     // End Score Input
@@ -135,6 +143,9 @@ Window {
             anchors.fill: parent
             onPressed: id_buttonUpdate.color = "yellow"
             onReleased: id_buttonUpdate.color = "green"
+            onClicked: {
+                id_AppHMIService.requestUpdateData(currentEmpName, aScore[0],aScore[1],aScore[2],aScore[3],aScore[4])
+            }
         }
     }
     // End Update Button
@@ -256,8 +267,8 @@ Window {
                 }
             }
         }
-        highlight: id_EmployeeInListItem
-        highlightFollowsCurrentItem: true
-        focus: true
+//        highlight: id_EmployeeInListItem
+//        highlightFollowsCurrentItem: true
+//        focus: true
     }
 }

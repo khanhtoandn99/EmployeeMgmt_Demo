@@ -27,6 +27,9 @@ public:
     // IPC from Service:
     void onResponseScoreDataToA(const E_GET_SCORE_DATA_RESULT &eResult, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
 
+    // IPC notify from Service
+    void onNotifyDataChanged();
+
 signals:
     void signalUpdateScoreModel(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
 

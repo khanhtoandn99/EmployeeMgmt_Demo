@@ -8,6 +8,8 @@ Item {
     // Get from Model:
     property string textCurrentScore: "0"
 
+    signal scoreTextChanged()
+
 //    TextInput {
 //        id: id_textInputScore
 //        width: 80
@@ -34,6 +36,12 @@ Item {
             horizontalAlignment: Text.AlignHCenter
             maximumLength: 1
             text: textCurrentScore
+            onTextChanged: {
+                textCurrentScore = id_textInputScore.text
+//                console.log("id_textInputScore.onTextChanged >> id_textInputScore.text = " + id_textInputScore.text)
+//                console.log("id_textInputScore.onTextChanged >> textCurrentScore = " + textCurrentScore)
+                scoreTextChanged()
+            }
         }
     }
 
