@@ -41,6 +41,7 @@ public:
     };
 
     void init();
+    Q_INVOKABLE void requestReloadData();
 
 private:
     QVector<EMPLOYEE_LIST_ITEM_T> vEmployeeList;
@@ -78,7 +79,7 @@ public:
 
     void init();
 
-    Q_INVOKABLE void updateDetailData(const int &id, const QString &name);
+    Q_INVOKABLE void updateDetailData(const QString &name);
 
 private:
     QVector<int> vEmployeeScore;

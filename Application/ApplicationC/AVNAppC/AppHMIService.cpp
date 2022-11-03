@@ -140,11 +140,13 @@ void AppHMIService::onResponseScoreDataToC(const E_GET_SCORE_DATA_RESULT &eResul
     if (eResult != E_GET_SCORE_DATA_RESULLT_OK) return;
 
     qDebug("[%s] %s << emit signalUpdateScoreModel", __FILE__, __func__);
-    emit signalUpdateScoreModel(asmScore, cppScore, jsScore, qmlScore, openglScore);
+    emit signalResponseScoreDataToC(asmScore, cppScore, jsScore, qmlScore, openglScore);
 }
 
 void AppHMIService::onResponseUpdateData(const E_UPDATE_DATA_RESULT &eResult)
 {
     qDebug("[%s] %s >> eResult: %d", __FILE__, __func__, eResult);
-    // Request Model to reset to show the employee list with score average changed
+    // Request Model to reset and show the employee list with score average changed
+    signalResponseUpdateData();
+
 }

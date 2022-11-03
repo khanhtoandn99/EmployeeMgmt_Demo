@@ -111,6 +111,11 @@ void EmployeeDataModel::init()
 
 }
 
+void EmployeeDataModel::requestReloadData()
+{
+    qDebug("[%s] %s", __FILE__, __func__);
+    init();
+}
 
 
 EmployeeDataDetailModel::EmployeeDataDetailModel(QObject *parent)
@@ -193,12 +198,11 @@ void EmployeeDataDetailModel::init()
     shmdt(empDataPtr);
 }
 
-void EmployeeDataDetailModel::updateDetailData(const int &id, const QString &name)
+void EmployeeDataDetailModel::updateDetailData(const QString &name)
 {
-    qDebug("[%s] %s >> id: %d, name: %s"
+    qDebug("[%s] %s >> name: %s"
            ,__FILE__
            ,__func__
-           ,id
            ,name.toStdString().c_str());
     // Send IPC to Service
     // onResponse from Service

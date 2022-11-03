@@ -10,7 +10,7 @@
 #include "MqHandler.h"
 #include "common.h"
 
-class AppHMIService :public QThread /*: public QObject*/
+class AppHMIService : public QThread /*: public QObject*/
 {
     Q_OBJECT
 //    Q_PROPERTY(bool m_ueConnected READ isConnected WRITE setConnected NOTIFY ueConnectedChanged)
@@ -25,13 +25,18 @@ public:
 //    Q_INVOKABLE void requestReloadData(); // Dont need request to Service, just read from available Shm
 
     // IPC from Service:
-    void onResponseScoreDataToA(const E_GET_SCORE_DATA_RESULT &eResult, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
+    void onResponseScoreDataToA(const E_GET_SCORE_DATA_RESULT &eResult
+                               ,const int &asmScore
+                               ,const int &cppScore
+                               ,const int &jsScore
+                               ,const int &qmlScore
+                               ,const int &openglScore);
 
     // IPC notify from Service
     void onNotifyDataChanged();
 
 signals:
-    void signalUpdateScoreModel(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
+    void signalResponseScoreDataToA(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
 
 private: // Func
 

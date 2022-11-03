@@ -23,9 +23,6 @@ int main(int argc, char *argv[])
     qmlRegisterType<EmployeeDataProxyModel>("EmpDataProxyModel",1,0,"EmployeeDataProxyModel");
     qmlRegisterType<AppHMIService>("AppHMIService", 1, 0, "AppHMIService");
 
-    AppHMIService appService;
-    appService.start();
-
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

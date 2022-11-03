@@ -1,0 +1,10 @@
+0 toan1nguyen 1 2 3 4 5 3.2 0
+1 luan1pham 1 1 1 1 1 1.1 0
+2 tru1vu 2 2 2 2 2 2.2 0
+3 hoang1nguyen 3 3 3 3 3 3.3 0
+4 viet1mac 4 4 4 4 4 4.4 0
+5 toan5nguyen 5 5 5 5 5 5.0 0
+6 luan5pham 5 4 3 2 1 2.5 0
+7 hoang5nguyen 1 2 3 5 4 4.2 0
+8 tru5vu 0 0 0 0 0 5 0
+9 viet5mac 5 5 5 5 5 5 0

@@ -34,11 +34,22 @@ Window {
     EmployeeDataDetailModel {
         id: id_EmployeeDataDetailModel
     }
+
     AppHMIService {
         id: id_AppHMIService
-        onSignalUpdateScoreModel: {
-            console.log("onSignalUpdateScoreModel")
-            id_EmployeeDataDetailModel.updateDetailData(asmScore, cppScore, jsScore, qmlScore, openglScore)
+        Component.onCompleted: {
+            id_AppHMIService.start()
+        }
+
+        onSignalResponseScoreDataToC: {
+            console.log("AppHMIService.onSignalResponseScoreDataToC")
+            id_EmployeeDataDetailModel.updateDetailData(currentEmpName) // reload 5 score to view
+        }
+
+        onSignalResponseUpdateData: {
+            console.log("AppHMIService.onSignalResponseUpdateData")
+            id_EmployeeDataDetailModel.updateDetailData(currentEmpName) // reload 5 score to view
+            id_EmployeeDataModel.requestReloadData() // reload list employee Name + Average score to view
         }
     }
 
@@ -112,7 +123,6 @@ Window {
             onScoreTextChanged: {
                 if (textCurrentScore !== "") {
                     aScore[index] = parseInt(textCurrentScore)
-//                    console.log("id_skillScoreInputList.onScoreTextChanged() to " + aScore[0].toString() + " " + aScore[1].toString() + " " + aScore[2].toString() + " " + aScore[3].toString() + " " + aScore[4].toString())
                 }
             }
         }
@@ -144,7 +154,7 @@ Window {
             onPressed: id_buttonUpdate.color = "yellow"
             onReleased: id_buttonUpdate.color = "green"
             onClicked: {
-                id_AppHMIService.requestUpdateData(currentEmpName, aScore[0],aScore[1],aScore[2],aScore[3],aScore[4])
+                id_AppHMIService.requestUpdateData(currentEmpName, aScore[0],aScore[1],aScore[2],aScore[3],aScore[4]) // To Service via IPC
             }
         }
     }
@@ -263,12 +273,9 @@ Window {
                 onClicked: {
                     currentEmpName = employeeName
                     id_AppHMIService.requestGetScoreDataFromC(index, currentEmpName)
-                    id_EmployeeDataDetailModel.updateDetailData(index, currentEmpName)
+//                    id_EmployeeDataDetailModel.updateDetailData(index, currentEmpName) // Hack code
                 }
             }
         }
-//        highlight: id_EmployeeInListItem
-//        highlightFollowsCurrentItem: true
-//        focus: true
     }
 }

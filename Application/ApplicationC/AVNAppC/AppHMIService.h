@@ -26,12 +26,17 @@ public:
     Q_INVOKABLE void requestSaveDataOnExit();
 
     // IPC from service
-    void onResponseScoreDataToC(const E_GET_SCORE_DATA_RESULT &eResult, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
+    void onResponseScoreDataToC(const E_GET_SCORE_DATA_RESULT &eResult
+                               ,const int &asmScore
+                               ,const int &cppScore
+                               ,const int &jsScore
+                               ,const int &qmlScore
+                               ,const int &openglScore);
     void onResponseUpdateData(const E_UPDATE_DATA_RESULT &eResult);
 
 signals:
-    void signalUpdateScoreModel(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
-
+    void signalResponseScoreDataToC(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
+    void signalResponseUpdateData();
 private: // Func
 
 private: // Var/proxy

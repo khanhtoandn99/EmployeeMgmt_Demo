@@ -37,6 +37,7 @@ private:
     void init();
     void loadEmpData();
     void debugShm(EMPLOYEE_DATA_T *aEmpDataTmp);
+    void saveEmpDataToFile();
 
 
     MqHandler *m_mqHandler;

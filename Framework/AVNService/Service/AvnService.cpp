@@ -63,6 +63,15 @@ void AvnService::loadEmpData()
                                             ,&pEmpDataTmp[i].openglScore
                                             ,&pEmpDataTmp[i].average
                                             ,&pEmpDataTmp[i].isSelected);
+//            cout << pEmpDataTmp[i].id << " "
+//                << pEmpDataTmp[i].name << " "
+//                << pEmpDataTmp[i].asmScore << " "
+//                << pEmpDataTmp[i].cppScore << " "
+//                << pEmpDataTmp[i].jsScore << " "
+//                << pEmpDataTmp[i].qmlScore << " "
+//                << pEmpDataTmp[i].openglScore << " "
+//                << pEmpDataTmp[i].average << " "
+//                << pEmpDataTmp[i].isSelected << "\n";
             ++i;
         }
         rfData.close();
@@ -73,11 +82,10 @@ void AvnService::loadEmpData()
 
     memcpy(pShMem, pEmpDataTmp, sizeof(EMPLOYEE_DATA_T)*EMPLOYEE_IN_LIST_MODEL_MAX);
 
-//    debugShm(pShMem);
+    debugShm(pShMem);
     cout << "[AvnService] "<< __func__ << "Data wrote to Shared Memory" << endl;
     delete[] pEmpDataTmp;
     pEmpDataTmp = nullptr;
-
 
     //detach from shared memory
     shmdt(pEmpDataTmp);
@@ -168,6 +176,12 @@ void AvnService::requestUpdateData(const string &name, const int &asmScore, cons
             break;
         }
     }
+    debugShm(pShMem);
+
+    //detach from shared memory
+    shmdt(pShMem);
+
+    saveEmpDataToFile();
     // deploy onResponse to client
     m_deploy->onResponseUpdateData(eResult);
     // notify to all client relate
@@ -183,29 +197,46 @@ void AvnService::requestSaveDataOnExit()
     int shmid = shmget(key,4096,0666|IPC_CREAT);
     // shmat to attach to shared memory
     EMPLOYEE_DATA_T *pShMem = (EMPLOYEE_DATA_T*) shmat(shmid,(void*)0,0);
+    EMPLOYEE_DATA_T *pEmpDataTmp = new EMPLOYEE_DATA_T[EMPLOYEE_IN_LIST_MODEL_MAX];
+//    memcpy(pEmpDataTmp, pShMem, sizeof(EMPLOYEE_DATA_T)*EMPLOYEE_IN_LIST_MODEL_MAX);
 
     std::ofstream wfData;
     wfData.open(EMPLOYEE_DATA_MODEL_FILE_PATH, std::ifstream::out);
     if (wfData.is_open()) {
         int i = 0;
+        wfData.clear();
         while (i < 10)
         {
-            wfData << pShMem[i].id << " "
-                    << pShMem[i].name << " "
-                    << pShMem[i].asmScore << " "
-                    << pShMem[i].cppScore << " "
-                    << pShMem[i].jsScore << " "
-                    << pShMem[i].qmlScore << " "
-                    << pShMem[i].openglScore << " "
-                    << pShMem[i].average << " "
-                    << pShMem[i].isSelected << endl;
+            string wLine = "";
+            wLine += std::to_string(pShMem[i].id);
+            wLine += " ";
+            wLine += string(pShMem[i].name);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].asmScore);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].cppScore);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].jsScore);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].qmlScore);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].openglScore);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].average);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].isSelected);
+            wLine += "\n";
+            wfData << wLine;
+            // debug
+            cout << wLine;
             ++i;
         }
         wfData.close();
     }
+    delete[] pEmpDataTmp;
+    pEmpDataTmp = nullptr;
     //detach from shared memory
     shmdt(pShMem);
-
     // destroy the shared memory
     shmctl(shmid,IPC_RMID,NULL);
 }
@@ -303,4 +334,53 @@ thread AvnService::runMqReceiveLooper()
             }
         }
     }
+}
+
+void AvnService::saveEmpDataToFile()
+{
+    cout << "[AvnService] " << __func__ << endl;
+
+    key_t key = ftok("shmfile",65);
+    // shmget returns an identifier in shmid
+    int shmid = shmget(key,4096,0666|IPC_CREAT);
+    // shmat to attach to shared memory
+    EMPLOYEE_DATA_T *pShMem = (EMPLOYEE_DATA_T*) shmat(shmid,(void*)0,0);
+    EMPLOYEE_DATA_T *pEmpDataTmp = new EMPLOYEE_DATA_T[EMPLOYEE_IN_LIST_MODEL_MAX];
+    memcpy(pEmpDataTmp, pShMem, sizeof(EMPLOYEE_DATA_T)*EMPLOYEE_IN_LIST_MODEL_MAX);
+
+    std::ofstream wfData;
+    wfData.open(EMPLOYEE_DATA_MODEL_FILE_PATH, std::ifstream::out);
+    if (wfData.is_open()) {
+        int i = 0;
+        wfData.clear();
+        while (i < 10)
+        {
+            string wLine = "";
+            wLine += std::to_string(pShMem[i].id);
+            wLine += " ";
+            wLine += string(pShMem[i].name);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].asmScore);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].cppScore);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].jsScore);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].qmlScore);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].openglScore);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].average);
+            wLine += " ";
+            wLine += std::to_string(pShMem[i].isSelected);
+            wLine += "\n";
+            wfData << wLine;
+            // debug
+            cout << wLine;
+            ++i;
+        }
+        wfData.close();
+    }
+    //detach from shared memory
+    shmdt(pShMem);
 }

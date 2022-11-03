@@ -22,8 +22,6 @@ Window {
     property int currentEmpQmlScore: 0
     property int currentEmpOpenglScore: 0
 
-    signal getDetailData(string name)
-
 
     EmployeeDataModel {
         id: id_EmployeeDataModel
@@ -35,9 +33,12 @@ Window {
 
     AppHMIService {
         id: id_AppHMIService
-        onSignalUpdateScoreModel: {
-            console.log("onSignalUpdateScoreModel")
-            id_EmployeeDataDetailModel.updateDetailData(asmScore, cppScore, jsScore, qmlScore, openglScore)
+        Component.onCompleted: {
+            id_AppHMIService.start()
+        }
+        onSignalResponseScoreDataToA: {
+            console.log("AppHMIService.onSignalResponseScoreDataToA")
+            id_EmployeeDataDetailModel.updateDetailData(currentEmpName) // reload 5 score to view
         }
     }
 
@@ -249,20 +250,15 @@ Window {
             // Get from model:
             textEmployeeName: employeeName
             textAverageScore: averageScore.toString()
-//            isChoosing: isSelected
+            isChoosing: isSelected
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
                     currentEmpName = employeeName
-                    id_EmployeeDataDetailModel.updateDetailData(index, currentEmpName)
-                    id_AppHMIService.requestGetScoreDataFromA(index, currentEmpName)
+                    id_AppHMIService.requestGetScoreDataFromA(index, currentEmpName) // Request to Service via IPC
                 }
             }
         }
-    }
-
-    onGetDetailData: {
-        id_EmployeeDataDetailModel.updateDetailData(name)
     }
 }
