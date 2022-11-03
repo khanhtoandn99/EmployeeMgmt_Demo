@@ -17,6 +17,7 @@ enum E_GET_SCORE_DATA_RESULT : int
     E_GET_SCORE_DATA_RESULLT_NAME_NOT_FOUND
 };
 
+
 typedef struct
 {
     int id;

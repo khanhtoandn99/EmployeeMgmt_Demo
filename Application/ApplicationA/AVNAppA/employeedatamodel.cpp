@@ -111,6 +111,47 @@ void EmployeeDataModel::init()
 
 }
 
+void EmployeeDataModel::requestReloadData()
+{
+    qDebug("[%s] %s", __FILE__, __func__);
+    beginResetModel();
+    vEmployeeList.clear();
+    endResetModel();
+
+//    QThread::sleep(2000);
+
+    beginResetModel();
+    key_t key = ftok("shmfile",65);
+    int shmid = shmget(key,4096,0666|IPC_CREAT);
+    EMPLOYEE_DATA_T *empDataPtr = (EMPLOYEE_DATA_T*) shmat(shmid,(void*)0,0);
+
+    EMPLOYEE_LIST_ITEM_T empListItemTmp;
+    if (empDataPtr == nullptr) {
+        qDebug("[%s] %s << empDataPtr is nullptr", __FILE__, __func__);
+        return;
+    }
+    EMPLOYEE_DATA_T aEmpDataTmp[10];
+    memcpy(aEmpDataTmp, empDataPtr, sizeof(EMPLOYEE_DATA_T)*10);
+
+    for (int i = 0; i < 10; ++i)
+    {
+        empListItemTmp.id = aEmpDataTmp[i].id;
+        empListItemTmp.name = QString::fromUtf8(aEmpDataTmp[i].name);
+        empListItemTmp.averageScore = aEmpDataTmp[i].average;
+        empListItemTmp.isSelected = aEmpDataTmp[i].isSelected;
+//        qDebug("empListItemTmp.id = %d", empListItemTmp.id);
+//        qDebug() << "empListItemTmp.name = " << empListItemTmp.name;
+//        qDebug("empListItemTmp.averageScore = %.2f", empListItemTmp.averageScore);
+//        qDebug("empListItemTmp.isSelected = %d", empListItemTmp.isSelected);
+        vEmployeeList.push_back(empListItemTmp);
+    }
+    qDebug("[%s] %s << Init data from Shm completed", __FILE__, __func__);
+    endResetModel();
+
+    //detach from shared memory
+    shmdt(empDataPtr);
+}
+
 
 
 EmployeeDataDetailModel::EmployeeDataDetailModel(QObject *parent)

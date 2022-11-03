@@ -104,7 +104,7 @@ void AvnService::debugShm(EMPLOYEE_DATA_T *aEmpDataTmp)
     }
 }
 
-void AvnService::requestGetScoreData(const int &id, const string &name)
+void AvnService::requestGetScoreDataFromC(const int &id, const string &name)
 {
     cout << "[AvnService] "<<__func__ << "id: "<<id << " name: "<<name << endl;
 
@@ -132,7 +132,38 @@ void AvnService::requestGetScoreData(const int &id, const string &name)
         }
     }
     // deploy onResponse to client
-    m_deploy->onResponseScoreData(eResult, asmScore, cppScore, jsScore, qmlScore, openglSccore);
+    m_deploy->onResponseScoreDataToC(eResult, asmScore, cppScore, jsScore, qmlScore, openglSccore);
+}
+
+void AvnService::requestGetScoreDataFromA(const int &id, const string &name)
+{
+    cout << "[AvnService] "<<__func__ << "id: "<<id << " name: "<<name << endl;
+
+    // Init Shm
+    // Write to Shm:
+    key_t key = ftok("shmfile",65);
+    // shmget returns an identifier in shmid
+    int shmid = shmget(key,4096,0666|IPC_CREAT);
+    // shmat to attach to shared memory
+    EMPLOYEE_DATA_T *pShMem = (EMPLOYEE_DATA_T*) shmat(shmid,(void*)0,0);
+
+    int asmScore = 0, cppScore = 0, jsScore = 0, qmlScore = 0, openglSccore = 0;
+    E_GET_SCORE_DATA_RESULT eResult = E_GET_SCORE_DATA_RESULLT_FAILED;
+    for (int i = 0; i < EMPLOYEE_IN_LIST_MODEL_MAX; ++i) {
+//        cout << pShMem[i].name << endl;
+        if (strncmp(name.c_str(), pShMem[i].name, EMPLOYEE_NAME_MAXSIZE-1) == 0) {
+            cout << "[AvnService] " << __func__ << " Matched!" << endl;
+            asmScore = pShMem[i].asmScore;
+            cppScore = pShMem[i].cppScore;
+            jsScore = pShMem[i].jsScore;
+            qmlScore = pShMem[i].qmlScore;
+            openglSccore = pShMem[i].openglScore;
+            eResult = E_GET_SCORE_DATA_RESULLT_OK;
+            break;
+        }
+    }
+    // deploy onResponse to client
+    m_deploy->onResponseScoreDataToA(eResult, asmScore, cppScore, jsScore, qmlScore, openglSccore);
 }
 
 thread AvnService::runMqReceiveLooper()
@@ -147,15 +178,40 @@ thread AvnService::runMqReceiveLooper()
     {
         if (m_mqHandler->received(mqMsgBuffer) > 0)
         {
-            char clientPath[100];
-            sscanf(mqMsgBuffer.msg_text, "%s", clientPath);
-            cout << "[AvnService] "<<__func__ << "clientPath "<<clientPath << endl;
-            cout << "[AvnService] "<<__func__ << "mqMsgBuffer.msg_type "<<mqMsgBuffer.msg_type << endl;
-            int id;
-            char name[100];
-            sscanf(mqMsgBuffer.msg_text, "%s %d %s", clientPath, &id, name);
-            requestGetScoreData(id, string(name));
-            memset(&mqMsgBuffer, 0x0, sizeof(MQ_MSG_DATA_T));
+            E_MQ_MSG_APP_SERVICE_ID eClientID;
+            int funcId;
+            sscanf(mqMsgBuffer.msg_text, "%d %d", &eClientID, &funcId);
+            cout << "[AvnService] "<<__func__ << "eClientID: "<<eClientID << endl;
+            cout << "[AvnService] "<<__func__ << "funcId: "<<funcId << endl;
+
+            if (eClientID == E_MQ_MSG_APPLICATION_A_ID) {
+                switch (funcId) {
+                case E_MQ_MSG_SERVICE_FUNC_ID_requestGetScoreDataFromA:
+                {
+                    int empId;
+                    char empName[100];
+                    sscanf(mqMsgBuffer.msg_text, "%d %d %d %s", &eClientID, &funcId, &empId, empName);
+                    requestGetScoreDataFromA(empId, string(empName));
+                }
+                    break;
+                default:
+                    break;
+                }
+            }
+            else if (eClientID == E_MQ_MSG_APPLICATION_C_ID) {
+                switch (funcId) {
+                case E_MQ_MSG_SERVICE_FUNC_ID_requestGetScoreDataFromC:
+                {
+                    int empId;
+                    char empName[100];
+                    sscanf(mqMsgBuffer.msg_text, "%d %d %d %s", &eClientID, &funcId, &empId, empName);
+                    requestGetScoreDataFromC(empId, string(empName));
+                }
+                    break;
+                default:
+                    break;
+                }
+            }
         }
     }
 }

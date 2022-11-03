@@ -33,6 +33,42 @@ enum E_MQ_MSG_TYPE : long // long type is important for MQ
     E_MQ_MSG_TYPE_NUM
 };
 
+enum E_MQ_MSG_APP_SERVICE_ID
+{
+    E_MQ_MSG_APPLICATION_A_ID = 1,
+    E_MQ_MSG_APPLICATION_C_ID,
+    E_MQ_MSG_SERVICE_B_ID,
+    E_MQ_MSG_APP_SERVICE_NUM
+};
+
+enum E_MQ_MSG_APP_A_FUNC_ID
+{
+    // To Service:
+
+    // To proxy:
+    E_MQ_MSG_APP_A_FUNC_ID_NUM
+};
+
+enum E_MQ_MSG_APP_C_FUNC_ID
+{
+    // To Service:
+
+    // To Proxy:
+    E_MQ_MSG_APP_C_FUNC_ID_NUM
+};
+
+enum E_MQ_MSG_SERVICE_FUNC_ID
+{
+    // To Service:
+    E_MQ_MSG_SERVICE_FUNC_ID_requestGetScoreDataFromA = 1,
+    E_MQ_MSG_SERVICE_FUNC_ID_requestGetScoreDataFromC,
+
+    // To Proxy:
+    E_MQ_MSG_SERVICE_FUNC_ID_onResponseScoreDataToA,
+    E_MQ_MSG_SERVICE_FUNC_ID_onResponseScoreDataToC,
+    E_MQ_MSG_SERVICE_FUNC_ID_NUM
+};
+
 typedef struct
 {
     key_t key;

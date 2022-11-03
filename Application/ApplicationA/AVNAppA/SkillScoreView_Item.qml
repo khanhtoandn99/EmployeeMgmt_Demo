@@ -14,7 +14,7 @@ Item {
         height: parent.height
         font.pixelSize: textSize
         verticalAlignment: Text.AlignVCenter
-        text: textCurrentScore
+        text: textCurrentScore + "/5"
     }
 
     Image {

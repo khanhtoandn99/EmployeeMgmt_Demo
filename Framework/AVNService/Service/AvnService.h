@@ -25,8 +25,12 @@ public:
     ~AvnService();
 
     void start();
-    void requestGetScoreData(const int &id, const string &name);
     thread runMqReceiveLooper();
+
+    // IPC from Client AVN App A
+    void requestGetScoreDataFromA(const int &id, const string &name);
+    // IPC from Client AVN App C
+    void requestGetScoreDataFromC(const int &id, const string &name);
 
 private:
     void init();

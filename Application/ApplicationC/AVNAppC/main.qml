@@ -217,7 +217,6 @@ Window {
 
     ListView {
         id: id_employeeList
-//        model: id_EmployeeDataModel
         width: 600
         height: parent.height
         anchors.horizontalCenter: parent.horizontalCenter
@@ -248,13 +247,17 @@ Window {
             isChoosing: isSelected
 
             MouseArea {
+                id: id_mouseAreaItem
                 anchors.fill: parent
                 onClicked: {
                     currentEmpName = employeeName
-                    id_AppHMIService.requestGetScoreData(index, currentEmpName)
+                    id_AppHMIService.requestGetScoreDataFromC(index, currentEmpName)
                     id_EmployeeDataDetailModel.updateDetailData(index, currentEmpName)
                 }
             }
         }
+        highlight: id_EmployeeInListItem
+        highlightFollowsCurrentItem: true
+        focus: true
     }
 }

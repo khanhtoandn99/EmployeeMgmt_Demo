@@ -112,7 +112,7 @@ Window {
     }
     // End Score Input
 
-    // Start Update Button:
+    // Start Refresh Button:
     Rectangle {
         id: id_buttonUpdate
         anchors.horizontalCenter: parent.horizontalCenter
@@ -136,6 +136,9 @@ Window {
             anchors.fill: parent
             onPressed: id_buttonUpdate.color = "yellow"
             onReleased: id_buttonUpdate.color = "green"
+            onClicked: {
+                id_EmployeeDataModel.requestReloadData()
+            }
         }
     }
     // End Update Button
@@ -252,8 +255,8 @@ Window {
                 anchors.fill: parent
                 onClicked: {
                     currentEmpName = employeeName
-                    id_AppHMIService.requestGetScoreData(index, currentEmpName)
-                    id_EmployeeDataDetailModel.updateDetailData(index, currentEmpName)
+                    id_AppHMIService.requestGetScoreDataFromA(index, currentEmpName)
+//                    id_EmployeeDataDetailModel.updateDetailData(index, currentEmpName)
                 }
             }
         }

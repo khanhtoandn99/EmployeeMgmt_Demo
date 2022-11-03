@@ -5,6 +5,7 @@
 #include <qdebug.h>
 #include "common.h"
 #include <cstring>
+#include <QThread>
 
 // IPC
 #include <sys/ipc.h>
@@ -41,6 +42,10 @@ public:
     };
 
     void init();
+
+    // From HMI:
+    Q_INVOKABLE void requestReloadData();
+
 
 private:
     QVector<EMPLOYEE_LIST_ITEM_T> vEmployeeList;
