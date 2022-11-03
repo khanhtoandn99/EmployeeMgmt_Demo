@@ -62,10 +62,12 @@ enum E_MQ_MSG_SERVICE_FUNC_ID
     // To Service:
     E_MQ_MSG_SERVICE_FUNC_ID_requestGetScoreDataFromA = 1,
     E_MQ_MSG_SERVICE_FUNC_ID_requestGetScoreDataFromC,
+    E_MQ_MSG_SERVICE_FUNC_ID_requestUpdateData,
 
     // To Proxy:
     E_MQ_MSG_SERVICE_FUNC_ID_onResponseScoreDataToA,
     E_MQ_MSG_SERVICE_FUNC_ID_onResponseScoreDataToC,
+    E_MQ_MSG_SERVICE_FUNC_ID_onResponseUpdateData,
     E_MQ_MSG_SERVICE_FUNC_ID_NUM
 };
 
