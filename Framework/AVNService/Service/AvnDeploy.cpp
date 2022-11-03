@@ -65,12 +65,51 @@ void AvnDeploy::onResponseScoreDataToC(const E_GET_SCORE_DATA_RESULT &eResult, c
     msg_text += " ";
     msg_text += to_string(openglScore);
 
-    MQ_MSG_DATA_T mqrequestGetScoreDataMsg;
-    memcpy(mqrequestGetScoreDataMsg.msg_text, msg_text.c_str(), sizeof(char)*MQ_MSG_DATA_MAX);
+    MQ_MSG_DATA_T mqMsg;
+    memcpy(mqMsg.msg_text, msg_text.c_str(), sizeof(char)*MQ_MSG_DATA_MAX);
     // Broadcast to all client
     for (int i = 0; i < MQ_APP_SERVICE_NUM-1; ++i) {
-        mqrequestGetScoreDataMsg.msg_type = (long)clientMsgType[i];
-        m_mqHandler->send(clientMsgKey[i].keyId, mqrequestGetScoreDataMsg);
+        mqMsg.msg_type = (long)clientMsgType[i];
+        m_mqHandler->send(clientMsgKey[i].keyId, mqMsg);
+    }
+}
+
+void AvnDeploy::onResponseUpdateData(const E_UPDATE_DATA_RESULT &eResult)
+{
+    cout << "[AvnDeploy] " << __func__
+         << ">> eResult: " << eResult
+         << endl;
+    string msg_text = "";
+    msg_text += std::to_string(E_MQ_MSG_SERVICE_B_ID);
+    msg_text += " ";
+    msg_text += std::to_string(E_MQ_MSG_SERVICE_FUNC_ID_onResponseUpdateData);
+    msg_text += " ";
+    msg_text += to_string((int)eResult);
+
+    MQ_MSG_DATA_T mqMsg;
+    memcpy(mqMsg.msg_text, msg_text.c_str(), sizeof(char)*MQ_MSG_DATA_MAX);
+    // Broadcast to all client
+    for (int i = 0; i < MQ_APP_SERVICE_NUM-1; ++i) {
+        mqMsg.msg_type = (long)clientMsgType[i];
+        m_mqHandler->send(clientMsgKey[i].keyId, mqMsg);
+    }
+}
+
+void AvnDeploy::onNotifyDataChanged()
+{
+    cout << "[AvnDeploy] " << __func__ << endl;
+
+    string msg_text = "";
+    msg_text += std::to_string(E_MQ_MSG_SERVICE_B_ID);
+    msg_text += " ";
+    msg_text += std::to_string(E_MQ_MSG_SERVICE_FUNC_ID_onResponseUpdateData);
+
+    MQ_MSG_DATA_T mqMsg;
+    memcpy(mqMsg.msg_text, msg_text.c_str(), sizeof(char)*MQ_MSG_DATA_MAX);
+    // Broadcast to all client
+    for (int i = 0; i < MQ_APP_SERVICE_NUM-1; ++i) {
+        mqMsg.msg_type = (long)clientMsgType[i];
+        m_mqHandler->send(clientMsgKey[i].keyId, mqMsg);
     }
 }
 
@@ -101,11 +140,11 @@ void AvnDeploy::onResponseScoreDataToA(const E_GET_SCORE_DATA_RESULT &eResult, c
     msg_text += " ";
     msg_text += to_string(openglScore);
 
-    MQ_MSG_DATA_T mqrequestGetScoreDataMsg;
-    memcpy(mqrequestGetScoreDataMsg.msg_text, msg_text.c_str(), sizeof(char)*MQ_MSG_DATA_MAX);
+    MQ_MSG_DATA_T mqMsg;
+    memcpy(mqMsg.msg_text, msg_text.c_str(), sizeof(char)*MQ_MSG_DATA_MAX);
     // Broadcast to all client
     for (int i = 0; i < MQ_APP_SERVICE_NUM-1; ++i) {
-        mqrequestGetScoreDataMsg.msg_type = (long)clientMsgType[i];
-        m_mqHandler->send(clientMsgKey[i].keyId, mqrequestGetScoreDataMsg);
+        mqMsg.msg_type = (long)clientMsgType[i];
+        m_mqHandler->send(clientMsgKey[i].keyId, mqMsg);
     }
 }

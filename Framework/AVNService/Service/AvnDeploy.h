@@ -29,6 +29,10 @@ public:
 
     // IPC To client App C
     void onResponseScoreDataToC(const E_GET_SCORE_DATA_RESULT &eResult, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
+    void onResponseUpdateData(const E_UPDATE_DATA_RESULT &eResult);
+
+    // IPC to Proxy Sync:
+    void onNotifyDataChanged();
 
 private:
     MqHandler *m_mqHandler;

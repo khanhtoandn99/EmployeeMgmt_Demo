@@ -71,6 +71,38 @@ void AppHMIService::requestGetScoreDataFromC(const int &id, const QString &name)
     m_mqHandler->send(msgget(keyTmp, 0666 | IPC_CREAT), mqrequestGetScoreDataMsg);
 }
 
+void AppHMIService::requestUpdateData(const QString &name, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore)
+{
+    qDebug("[%s] %s >> name: %s, asmScore: %d, cppScore: %d, jsScore: %d, qmlScore: %d, openglScore: %d"
+           , __FILE__, __func__, name.toStdString().c_str(), asmScore, cppScore, jsScore, qmlScore, openglScore);
+    MQ_MSG_DATA_T mqrequestGetScoreDataMsg;
+    // Change input text data here:
+    QString msg_text = "";
+    msg_text += QString::number(E_MQ_MSG_APPLICATION_C_ID);
+    msg_text += " ";
+    msg_text += QString::number(E_MQ_MSG_SERVICE_FUNC_ID_requestUpdateData);
+    msg_text += " ";
+    msg_text += name;
+    msg_text += " ";
+    msg_text += QString::number(asmScore);
+    msg_text += " ";
+    msg_text += QString::number(cppScore);
+    msg_text += " ";
+    msg_text += QString::number(jsScore);
+    msg_text += " ";
+    msg_text += QString::number(qmlScore);
+    msg_text += " ";
+    msg_text += QString::number(openglScore);
+    // End input text data here:
+
+    memcpy(mqrequestGetScoreDataMsg.msg_text, msg_text.toStdString().c_str(), sizeof(char)*MQ_MSG_DATA_MAX);
+    mqrequestGetScoreDataMsg.msg_type = (long)E_MQ_MSG_TYPE_FOR_SERVICE;
+    key_t keyTmp = ftok(MQ_FTOK_KEY_SERVICE_FILEPATH, MQ_FTOK_KEY_SERVICE_ID);
+    m_mqHandler->send(msgget(keyTmp, 0666 | IPC_CREAT), mqrequestGetScoreDataMsg);
+}
+
+
+
 void AppHMIService::onResponseScoreDataToC(const E_GET_SCORE_DATA_RESULT &eResult, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore)
 {
     qDebug("[%s] %s >> eResult: %d, asmScore: %d, cppScore: %d, jsScore: %d, qmlScore: %d, openglScore: %d"

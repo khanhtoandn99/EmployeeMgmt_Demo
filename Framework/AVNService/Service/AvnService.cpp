@@ -135,6 +135,44 @@ void AvnService::requestGetScoreDataFromC(const int &id, const string &name)
     m_deploy->onResponseScoreDataToC(eResult, asmScore, cppScore, jsScore, qmlScore, openglSccore);
 }
 
+void AvnService::requestUpdateData(const string &name, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore)
+{
+    cout << "[AvnService] "<<__func__ << " >> "
+            << "name: " << name
+            << "asmScore: " << asmScore
+            << "cppScore: " << cppScore
+            << "jsScore: " << jsScore
+            << "qmlScore: " << qmlScore
+            << "openglScore: " << openglScore << endl;
+
+    // Init Shm
+    // Write to Shm:
+    key_t key = ftok("shmfile",65);
+    // shmget returns an identifier in shmid
+    int shmid = shmget(key,4096,0666|IPC_CREAT);
+    // shmat to attach to shared memory
+    EMPLOYEE_DATA_T *pShMem = (EMPLOYEE_DATA_T*) shmat(shmid,(void*)0,0);
+
+    E_UPDATE_DATA_RESULT eResult = E_UPDATE_DATA_RESULLT_FAILED;
+    for (int i = 0; i < EMPLOYEE_IN_LIST_MODEL_MAX; ++i) {
+//        cout << pShMem[i].name << endl;
+        if (strncmp(name.c_str(), pShMem[i].name, EMPLOYEE_NAME_MAXSIZE-1) == 0) {
+            cout << "[AvnService] " << __func__ << " Matched!" << endl;
+            pShMem[i].asmScore = asmScore;
+            pShMem[i].cppScore = cppScore;
+            pShMem[i].jsScore = jsScore;
+            pShMem[i].qmlScore = qmlScore;
+            pShMem[i].openglScore = openglScore;
+            eResult = E_UPDATE_DATA_RESULLT_OK;
+            break;
+        }
+    }
+    // deploy onResponse to client
+    m_deploy->onResponseUpdateData(eResult);
+    // notify to all client relate
+    m_deploy->onNotifyDataChanged();
+}
+
 void AvnService::requestGetScoreDataFromA(const int &id, const string &name)
 {
     cout << "[AvnService] "<<__func__ << "id: "<<id << " name: "<<name << endl;
@@ -206,6 +244,14 @@ thread AvnService::runMqReceiveLooper()
                     char empName[100];
                     sscanf(mqMsgBuffer.msg_text, "%d %d %d %s", &eClientID, &funcId, &empId, empName);
                     requestGetScoreDataFromC(empId, string(empName));
+                }
+                    break;
+                case E_MQ_MSG_SERVICE_FUNC_ID_requestUpdateData:
+                {
+                    char empName[100];
+                    int asmScore, cppScore, jsScore, qmlScore, openglScore;
+                    sscanf(mqMsgBuffer.msg_text, "%d %d %s %d %d %d %d %d", &eClientID, &funcId, empName, &asmScore, &cppScore, &jsScore, &qmlScore, &openglScore);
+                    requestUpdateData(string(empName), asmScore, cppScore, jsScore, qmlScore, openglScore);
                 }
                     break;
                 default:

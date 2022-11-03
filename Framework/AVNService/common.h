@@ -13,6 +13,12 @@ enum E_GET_SCORE_DATA_RESULT : int
     E_GET_SCORE_DATA_RESULLT_NAME_NOT_FOUND
 };
 
+enum E_UPDATE_DATA_RESULT : int
+{
+    E_UPDATE_DATA_RESULLT_FAILED = 0,
+    E_UPDATE_DATA_RESULLT_OK
+};
+
 typedef struct
 {
     int id;

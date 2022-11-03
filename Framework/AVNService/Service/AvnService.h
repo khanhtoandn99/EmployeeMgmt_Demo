@@ -31,6 +31,7 @@ public:
     void requestGetScoreDataFromA(const int &id, const string &name);
     // IPC from Client AVN App C
     void requestGetScoreDataFromC(const int &id, const string &name);
+    void requestUpdateData(const string &name, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
 
 private:
     void init();

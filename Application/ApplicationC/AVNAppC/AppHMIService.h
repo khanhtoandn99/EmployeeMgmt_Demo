@@ -22,6 +22,7 @@ public:
 
     // IPC to Service
     Q_INVOKABLE void requestGetScoreDataFromC(const int &id, const QString &name);
+    Q_INVOKABLE void requestUpdateData(const QString &name, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
 
     // IPC from service
     void onResponseScoreDataToC(const E_GET_SCORE_DATA_RESULT &eResult, const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
