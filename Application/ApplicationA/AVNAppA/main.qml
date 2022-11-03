@@ -15,7 +15,7 @@ Window {
     title: "AVN Application A (View)"
 
     property int lastEmployeeIndexChoosen: 0
-    property string currentEmpName: "toan4nguyen"
+    property string currentEmpName: "toan1nguyen"
 
 
     EmployeeDataModel {

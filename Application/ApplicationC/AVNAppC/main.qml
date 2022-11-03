@@ -14,7 +14,7 @@ Window {
     minimumHeight: 1200
     title: "AVN Application C (Editor)"
 
-    property string currentEmpName: "toan4nguyen"
+    property string currentEmpName: "toan1nguyen"
     property var aScore: [1,2,1,2,1]
 
     signal getDetailData(string name)
