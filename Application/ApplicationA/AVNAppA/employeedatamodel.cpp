@@ -111,7 +111,7 @@ void EmployeeDataModel::init()
 
 }
 
-void EmployeeDataModel::requestReloadData()
+void EmployeeDataModel::loadEmployeeListToHMI()
 {
     qDebug("[%s] %s", __FILE__, __func__);
     init();
@@ -198,7 +198,7 @@ void EmployeeDataDetailModel::init()
     shmdt(empDataPtr);
 }
 
-void EmployeeDataDetailModel::updateDetailData(const QString &name)
+void EmployeeDataDetailModel::loadScoresToHMI(const QString &name)
 {
     qDebug("[%s] %s >> name: %s"
            ,__FILE__

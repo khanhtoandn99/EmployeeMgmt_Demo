@@ -22,7 +22,6 @@ public:
 
     // IPC to service:
     Q_INVOKABLE void requestGetScoreDataFromA(const int &id, const QString &name);
-//    Q_INVOKABLE void requestReloadData(); // Dont need request to Service, just read from available Shm
 
     // IPC from Service:
     void onResponseScoreDataToA(const E_GET_SCORE_DATA_RESULT &eResult
@@ -37,7 +36,7 @@ public:
 
 signals:
     void signalResponseScoreDataToA(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
-
+    void signalNotifyDataChanged();
 private: // Func
 
 private: // Var/proxy

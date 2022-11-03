@@ -16,11 +16,6 @@ Window {
 
     property int lastEmployeeIndexChoosen: 0
     property string currentEmpName: "value"
-    property int currentEmpAsmScore: 0
-    property int currentEmpCppScore: 0
-    property int currentEmpJsScore: 0
-    property int currentEmpQmlScore: 0
-    property int currentEmpOpenglScore: 0
 
 
     EmployeeDataModel {
@@ -38,7 +33,12 @@ Window {
         }
         onSignalResponseScoreDataToA: {
             console.log("AppHMIService.onSignalResponseScoreDataToA")
-            id_EmployeeDataDetailModel.updateDetailData(currentEmpName) // reload 5 score to view
+            id_EmployeeDataDetailModel.loadScoresToHMI(currentEmpName) // reload 5 score to view
+        }
+        onSignalNotifyDataChanged: {
+            console.log("AppHMIService.onSignalNotifyDataChanged")
+            id_EmployeeDataDetailModel.loadScoresToHMI(currentEmpName) // reload 5 score to view
+            id_EmployeeDataModel.loadEmployeeListToHMI() // reload list employee Name + Average score to view
         }
     }
 
@@ -138,7 +138,7 @@ Window {
             onPressed: id_buttonUpdate.color = "yellow"
             onReleased: id_buttonUpdate.color = "green"
             onClicked: {
-                id_EmployeeDataModel.requestReloadData()
+                id_EmployeeDataModel.loadEmployeeListToHMI()
             }
         }
     }

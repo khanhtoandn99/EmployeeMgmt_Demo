@@ -89,7 +89,7 @@ void AppHMIService::onResponseScoreDataToA(const E_GET_SCORE_DATA_RESULT &eResul
            ,openglScore);
     if (eResult != E_GET_SCORE_DATA_RESULLT_OK) return;
 
-    qDebug("[%s] %s << emit signalUpdateScoreModel", __FILE__, __func__);
+    qDebug("[%s] %s << emit signalResponseScoreDataToA", __FILE__, __func__);
     emit signalResponseScoreDataToA(asmScore, cppScore, jsScore, qmlScore, openglScore);
 
 }
@@ -97,4 +97,6 @@ void AppHMIService::onResponseScoreDataToA(const E_GET_SCORE_DATA_RESULT &eResul
 void AppHMIService::onNotifyDataChanged()
 {
     qDebug("[%s] %s", __FILE__, __func__);
+    qDebug("[%s] %s << emit signalNotifyDataChanged", __FILE__, __func__);
+    emit signalNotifyDataChanged();
 }

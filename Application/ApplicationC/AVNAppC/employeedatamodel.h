@@ -14,7 +14,6 @@ class EmployeeDataModel : public QAbstractListModel
 {
 Q_OBJECT
 signals:
-    void signalUpdateDetailData(const int &asmScore, const int &cppScore, const int &jsScore, const int &qmlScore, const int &openglScore);
 
 public:
     explicit EmployeeDataModel(QObject *parent = nullptr);
@@ -41,7 +40,7 @@ public:
     };
 
     void init();
-    Q_INVOKABLE void requestReloadData();
+    Q_INVOKABLE void loadEmployeeListToHMI();
 
 private:
     QVector<EMPLOYEE_LIST_ITEM_T> vEmployeeList;
@@ -79,7 +78,7 @@ public:
 
     void init();
 
-    Q_INVOKABLE void updateDetailData(const QString &name);
+    Q_INVOKABLE void loadScoresToHMI(const QString &name);
 
 private:
     QVector<int> vEmployeeScore;

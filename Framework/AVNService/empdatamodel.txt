@@ -1,4 +1,4 @@
-0 toan1nguyen 5 5 5 5 0 4.000000 0
+0 toan1nguyen 2 2 3 5 0 2.000000 0
 1 luan1pham 4 4 4 4 0 3.000000 0
 2 tru1vu 3 3 3 3 3 3.000000 0
 3 hoang1nguyen 5 5 5 5 5 5.000000 0

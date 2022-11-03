@@ -14,14 +14,7 @@ Window {
     minimumHeight: 1200
     title: "AVN Application C (Editor)"
 
-    property int lastEmployeeIndexChoosen: 0
     property string currentEmpName: "value"
-    property int currentEmpAsmScore: 0
-    property int currentEmpCppScore: 0
-    property int currentEmpJsScore: 0
-    property int currentEmpQmlScore: 0
-    property int currentEmpOpenglScore: 0
-
     property var aScore: [1,2,1,2,1]
 
     signal getDetailData(string name)
@@ -43,13 +36,13 @@ Window {
 
         onSignalResponseScoreDataToC: {
             console.log("AppHMIService.onSignalResponseScoreDataToC")
-            id_EmployeeDataDetailModel.updateDetailData(currentEmpName) // reload 5 score to view
+            id_EmployeeDataDetailModel.loadScoresToHMI(currentEmpName) // reload 5 score to view
         }
 
         onSignalResponseUpdateData: {
             console.log("AppHMIService.onSignalResponseUpdateData")
-            id_EmployeeDataDetailModel.updateDetailData(currentEmpName) // reload 5 score to view
-            id_EmployeeDataModel.requestReloadData() // reload list employee Name + Average score to view
+            id_EmployeeDataDetailModel.loadScoresToHMI(currentEmpName) // reload 5 score to view
+            id_EmployeeDataModel.loadEmployeeListToHMI() // reload list employee Name + Average score to view
         }
     }
 
@@ -273,7 +266,7 @@ Window {
                 onClicked: {
                     currentEmpName = employeeName
                     id_AppHMIService.requestGetScoreDataFromC(index, currentEmpName)
-//                    id_EmployeeDataDetailModel.updateDetailData(index, currentEmpName) // Hack code
+//                    id_EmployeeDataDetailModel.loadScoresToHMI(index, currentEmpName) // Hack code
                 }
             }
         }
