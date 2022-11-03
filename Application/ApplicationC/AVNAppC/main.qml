@@ -14,7 +14,7 @@ Window {
     minimumHeight: 1200
     title: "AVN Application C (Editor)"
 
-    property string currentEmpName: "value"
+    property string currentEmpName: "toan4nguyen"
     property var aScore: [1,2,1,2,1]
 
     signal getDetailData(string name)
@@ -258,15 +258,15 @@ Window {
             // Get from model:
             textEmployeeName: employeeName
             textAverageScore: averageScore.toString()
-            isChoosing: isSelected
+            isChoosing: id_employeeList.currentIndex === index
 
             MouseArea {
                 id: id_mouseAreaItem
                 anchors.fill: parent
                 onClicked: {
                     currentEmpName = employeeName
+                    id_employeeList.currentIndex = index
                     id_AppHMIService.requestGetScoreDataFromC(index, currentEmpName)
-//                    id_EmployeeDataDetailModel.loadScoresToHMI(index, currentEmpName) // Hack code
                 }
             }
         }

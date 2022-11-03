@@ -171,7 +171,7 @@ void AvnService::requestUpdateData(const string &name, const int &asmScore, cons
             pShMem[i].jsScore = jsScore;
             pShMem[i].qmlScore = qmlScore;
             pShMem[i].openglScore = openglScore;
-            pShMem[i].average = (asmScore+cppScore+jsScore+qmlScore+openglScore)/5;
+            pShMem[i].average = (float)(asmScore+cppScore+jsScore+qmlScore+openglScore)/5;
             eResult = E_UPDATE_DATA_RESULLT_OK;
             break;
         }

@@ -15,7 +15,7 @@ Window {
     title: "AVN Application A (View)"
 
     property int lastEmployeeIndexChoosen: 0
-    property string currentEmpName: "value"
+    property string currentEmpName: "toan4nguyen"
 
 
     EmployeeDataModel {
@@ -269,12 +269,13 @@ Window {
             // Get from model:
             textEmployeeName: employeeName
             textAverageScore: averageScore.toString()
-            isChoosing: isSelected
+            isChoosing: id_employeeList.currentIndex === index
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
                     currentEmpName = employeeName
+                    id_employeeList.currentIndex = index
                     id_AppHMIService.requestGetScoreDataFromA(index, currentEmpName) // Request to Service via IPC
                 }
             }

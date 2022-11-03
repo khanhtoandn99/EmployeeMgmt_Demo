@@ -16,8 +16,8 @@ Item {
         id: id_buttonEmployeeInList
         width: parent.width
         height: parent.height
-        color: "white"
-        opacity: 1
+        color: isChoosing ? "blue" : "white"
+        opacity: isChoosing ? 0.5 : 1
 
         Text {
             id: id_textEmployeeName
@@ -41,19 +41,6 @@ Item {
             color: "black"
             text: averageScore.toString().substr(0,4)
 
-        }
-    }
-
-    onIsChoosingChanged: {
-        if (isChoosing === true) {
-            console.log("id_buttonEmployeeInList[" + employeeIndex + "] clicked")
-            id_buttonEmployeeInList.color = "blue"
-            id_buttonEmployeeInList.opacity = 0.5
-        }
-        else {
-            console.log("id_buttonEmployeeInList[" + employeeIndex + "] clicked")
-            id_buttonEmployeeInList.color = "white"
-            id_buttonEmployeeInList.opacity = 1
         }
     }
 }

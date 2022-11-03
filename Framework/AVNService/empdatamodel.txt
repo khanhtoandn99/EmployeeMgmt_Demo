@@ -1,10 +1,10 @@
-0 toan1nguyen 2 2 3 5 0 2.000000 0
-1 luan1pham 4 4 4 4 0 3.000000 0
-2 tru1vu 3 3 3 3 3 3.000000 0
-3 hoang1nguyen 5 5 5 5 5 5.000000 0
+0 toan1nguyen 2 2 3 4 2 2.600000 0
+1 luan1pham 4 4 5 4 0 3.400000 0
+2 tru1vu 3 3 3 3 6 3.600000 0
+3 hoang1nguyen 2 2 2 2 3 2.200000 0
 4 viet1mac 4 4 4 4 4 4.400000 0
-5 toan5nguyen 5 5 5 5 5 5.000000 0
+5 toan5nguyen 1 0 1 5 2 1.800000 0
 6 luan5pham 5 4 3 2 1 2.500000 0
 7 hoang5nguyen 1 2 3 5 4 4.200000 0
-8 tru5vu 0 0 0 0 0 5.000000 0
-9 viet5mac 5 5 5 5 5 5.000000 0
+8 tru5vu 0 3 0 5 0 1.600000 0
+9 viet5mac 5 2 5 1 0 2.600000 0
