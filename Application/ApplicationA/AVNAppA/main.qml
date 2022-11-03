@@ -114,6 +114,23 @@ Window {
     // End Score Input
 
     // Start Refresh Button:
+    Timer {
+        id: id_RefreshTimer
+        interval: 3000
+        onTriggered: {
+            id_employeeList.visible = true
+        }
+    }
+    BusyIndicator {
+        id: id_Loading
+        width: 100
+        height: 100
+        anchors.top: id_employeeList.top
+        anchors.topMargin: 200
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: !id_employeeList.visible
+    }
+
     Rectangle {
         id: id_buttonUpdate
         anchors.horizontalCenter: parent.horizontalCenter
@@ -139,6 +156,8 @@ Window {
             onReleased: id_buttonUpdate.color = "green"
             onClicked: {
                 id_EmployeeDataModel.loadEmployeeListToHMI()
+                id_RefreshTimer.start();
+                id_employeeList.visible = false
             }
         }
     }
